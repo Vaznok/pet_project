@@ -22,6 +22,9 @@
             <column name="publication_date" type="date">
                 <constraints nullable="false" />
             </column>
+            <column name="count" type="int">
+                <constraints nullable="false" />
+            </column>
         </createTable>
         <addUniqueConstraint schemaName="library"
                              tableName="books"
@@ -29,8 +32,8 @@
                              constraintName="book_index"/>
     </changeSet>
 
-    <changeSet id="create_clients" author="vlasenko_vitaliy">
-        <createTable tableName="clients">
+    <changeSet id="create_users" author="vlasenko_vitaliy">
+        <createTable tableName="users">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"
                              nullable="false" />
@@ -38,10 +41,42 @@
             <column name="email" type="varchar(50)">
                 <constraints nullable="false" unique="true" />
             </column>
-            <column name="first_name" type="varchar(50)">
+            <column name="nick_name" type="varchar(50)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="role" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
             <column name="last_name" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="contact" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create_users_books" author="vlasenko_vitaliy">
+        <createTable tableName="users_books">
+            <column name="user_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
+            </column>
+            <column name="book_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_book_id" references="book(id)"/>
+            </column>
+            <column name="received" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="planned_return" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="returned" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="penalty" type="int">
                 <constraints nullable="false" />
             </column>
         </createTable>
