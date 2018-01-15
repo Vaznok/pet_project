@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="create_books" author="vlasenko_vitaliy">
+        <createTable tableName="books">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false" />
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="author" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="publisher" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="publication_date" type="date">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addUniqueConstraint schemaName="library"
+                             tableName="books"
+                             columnNames="name, author, publisher, publication_date"
+                             constraintName="book_index"/>
+    </changeSet>
+
+    <changeSet id="create_clients" author="vlasenko_vitaliy">
+        <createTable tableName="clients">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false" />
+            </column>
+            <column name="email" type="varchar(50)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_name" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="tag-1.0" author="vlasenko_vitaliy">
+        <tagDatabase tag="1.0" />
+    </changeSet>
+
+</databaseChangeLog>
