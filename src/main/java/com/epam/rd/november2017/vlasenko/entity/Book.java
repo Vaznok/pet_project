@@ -14,7 +14,33 @@ public class Book {
         this.publicationDate = publicationDate;
         this.count = count;
     }
-    
+
+    public Book(String name, String author, String publisher, String publicationDate) {
+        this(name, author, publisher, publicationDate, 1);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+
+        Book book = (Book) o;
+
+        if (!name.equals(book.name)) return false;
+        if (!author.equals(book.author)) return false;
+        if (!publisher.equals(book.publisher)) return false;
+        return publicationDate.equals(book.publicationDate);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + author.hashCode();
+        result = 31 * result + publisher.hashCode();
+        result = 31 * result + publicationDate.hashCode();
+        return result;
+    }
+
     public String getName() {
         return name;
     }

@@ -8,7 +8,8 @@
         <createTable tableName="books">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"
-                             nullable="false" />
+                             nullable="false"
+                             deleteCascade="true" />
             </column>
             <column name="name" type="varchar(50)">
                 <constraints nullable="false" />
@@ -36,7 +37,8 @@
         <createTable tableName="users">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"
-                             nullable="false" />
+                             nullable="false"
+                             deleteCascade="true "/>
             </column>
             <column name="email" type="varchar(50)">
                 <constraints nullable="false" unique="true" />
@@ -65,7 +67,7 @@
                 <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
             </column>
             <column name="book_id" type="int">
-                <constraints nullable="false" foreignKeyName="fk_book_id" references="book(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_book_id" references="books(id)"/>
             </column>
             <column name="received" type="date">
                 <constraints nullable="false" />
