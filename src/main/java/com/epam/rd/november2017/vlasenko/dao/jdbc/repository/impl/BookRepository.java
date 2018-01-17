@@ -1,11 +1,10 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.DataSourceBoneCp;
+import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.CrudRepository;
 import com.epam.rd.november2017.vlasenko.entity.Book;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,13 +16,15 @@ public class BookRepository implements CrudRepository<Book, Integer> {
     private static final String UPDATE_BOOK_SQL = "UPDATE books SET name=?, author=?, publisher=?, publication_date=?, count=? WHERE id=?";
     private static final String REMOVE_BOOK_SQL = "DELETE FROM books WHERE id=?";
 
-    private DataSource dataSource = new DataSourceBoneCp();
+    private DataSource dataSource;
+
+    public BookRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
-    public void create(Book book) throws IOException, SQLException {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stat = conn.prepareStatement(ADD_BOOK_SQL)) {
-
+    public void create(Book book) throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(ADD_BOOK_SQL)) {
             stat.setString(1, book.getName());
             stat.setString(2, book.getAuthor());
             stat.setString(3, book.getPublisher());
@@ -33,95 +34,52 @@ public class BookRepository implements CrudRepository<Book, Integer> {
             stat.setInt(6, book.getCount());
 
             stat.executeQuery();
-
-            conn.commit();
         }
     }
 
     @Override
-    public void create(Iterable<Book> objects) throws IOException, SQLException {
-        try (Connection conn = dataSource.getConnection()) {
-            for (Book book : objects) {
-                create(book, conn);
-            }
-            conn.commit();
-        }
-    }
-
-    private void create(Book book, Connection conn) throws IOException, SQLException {
-        try (PreparedStatement stat = conn.prepareStatement(ADD_BOOK_SQL)) {
-
-            stat.setString(1, book.getName());
-            stat.setString(2, book.getAuthor());
-            stat.setString(3, book.getPublisher());
-            stat.setString(4, book.getPublicationDate());
-            stat.setInt(5, book.getCount());
-            stat.setInt(6, book.getCount());
-
-            stat.executeQuery();
+    public void create(Iterable<Book> objects) throws SQLException {
+        for (Book book : objects) {
+            create(book);
         }
     }
 
     @Override
-    public Book find(Integer id) throws IOException, SQLException {
+    public Book find(Integer id) throws SQLException, NoSuchEntityException {
         Book foundBook = null;
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stat = conn.prepareStatement(FIND_BOOK_SQL)) {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_BOOK_SQL)) {
             stat.setInt(1, id);
-            ResultSet rs = stat.executeQuery();
-            while (rs.next()) {
-                foundBook = new Book(rs.getString("name"),
-                        rs.getString("author"),
-                        rs.getString("publisher"),
-                        rs.getString("publication_date"),
-                        rs.getInt("count"));
+
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    foundBook = new Book(rs.getString("name"),
+                            rs.getString("author"),
+                            rs.getString("publisher"),
+                            rs.getString("publication_date"),
+                            rs.getInt("count"));
+                }
             }
-            conn.commit();
-        }
-        if (foundBook == null) {
-            throw new NullPointerException();
+            if (foundBook == null) {
+                throw new NoSuchEntityException();
+            }
         }
         return foundBook;
     }
 
     @Override
-    public Iterable<Book> find(Iterable<Integer> ids) throws IOException, SQLException {
+    public Iterable<Book> find(Iterable<Integer> ids) throws SQLException, NoSuchEntityException {
         List<Book> list = new LinkedList<>();
-        try (Connection conn = dataSource.getConnection()) {
-            for (Integer id : ids) {
-                Book foundBook = find(id, conn);
-                list.add(foundBook);
-            }
-            conn.commit();
+
+        for (Integer id : ids) {
+            Book foundBook = find(id);
+            list.add(foundBook);
         }
         return list;
     }
 
-    private Book find(Integer id, Connection conn) throws IOException, SQLException {
-        Book foundBook = null;
-        try (PreparedStatement stat = conn.prepareStatement(FIND_BOOK_SQL)) {
-            stat.setInt(1, id);
-
-            ResultSet rs = stat.executeQuery();
-            while (rs.next()) {
-                foundBook = new Book(rs.getString("name"),
-                        rs.getString("author"),
-                        rs.getString("publisher"),
-                        rs.getString("publication_date"),
-                        rs.getInt("count"));
-            }
-        }
-        if (foundBook == null) {
-            throw new NullPointerException();
-        }
-        return foundBook;
-    }
-
     @Override
-    public void update(Integer id, Book book) throws IOException, SQLException {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stat = conn.prepareStatement(UPDATE_BOOK_SQL)) {
-
+    public void update(Integer id, Book book) throws SQLException, NoSuchEntityException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(UPDATE_BOOK_SQL)) {
             stat.setString(1, book.getName());
             stat.setString(2, book.getAuthor());
             stat.setString(3, book.getPublisher());
@@ -132,25 +90,21 @@ public class BookRepository implements CrudRepository<Book, Integer> {
             int checkUpdate = stat.executeUpdate();
 
             if (checkUpdate == 0) {
-                throw new NullPointerException();
+                throw new NoSuchEntityException();
             }
-            conn.commit();
         }
     }
 
     @Override
-    public void delete(Integer id) throws IOException, SQLException {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stat = conn.prepareStatement(REMOVE_BOOK_SQL)) {
-
+    public void delete(Integer id) throws SQLException, NoSuchEntityException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(REMOVE_BOOK_SQL)) {
             stat.setInt(1, id);
 
             int checkUpdate = stat.executeUpdate();
 
             if (checkUpdate == 0) {
-                throw new NullPointerException();
+                throw new NoSuchEntityException();
             }
-            conn.commit();
         }
     }
 }

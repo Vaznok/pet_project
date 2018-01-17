@@ -12,11 +12,11 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DataSourceForTest extends SimpleDataSource {
-    private static Logger logger = LoggerFactory.getLogger(DataSourceBoneCp.class.getSimpleName());
+    private static Logger logger = LoggerFactory.getLogger(DataSourceForTest.class.getSimpleName());
 
     @Override
     public Connection getConnection() throws SQLException {
-        logger.info("Attempt to get JDBC connection!");
+        logger.debug("Attempt to get JDBC connection!");
         Properties props = new Properties();
         try (InputStream in = DataSourceBoneCp.class.getClassLoader().getResourceAsStream("db/test.properties")) {
             props.load(in);
@@ -45,7 +45,7 @@ public class DataSourceForTest extends SimpleDataSource {
         BoneCP connectionPool = new BoneCP(config);
         Connection conn = connectionPool.getConnection();
         conn.setAutoCommit(false);
-        logger.info("Jdbc connection is gotten!");
+        logger.debug("Jdbc connection is gotten!");
         return conn;
     }
 }

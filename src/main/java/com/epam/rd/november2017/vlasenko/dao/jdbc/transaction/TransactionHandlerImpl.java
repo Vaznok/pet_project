@@ -1,30 +1,38 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.transaction;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.SimpleDataSource;
+import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class TransactionHandlerImpl extends SimpleDataSource implements TransactionHandler {
     private static ThreadLocal<Connection> connectionHolder = new ThreadLocal<>();
     private DataSource dataSource;
 
-    public void setDataSource(DataSource dataSource) {
+    private static Logger logger = LoggerFactory.getLogger(TransactionHandlerImpl.class.getSimpleName());
+
+    public TransactionHandlerImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public <T> T doInTransaction(TransactionBody<T> body) {
-        T result = null;
-        try (Connection conn = dataSource.getConnection()){
+    public <T> T doInTransaction(TransactionBody<T> body) throws SQLException, NoSuchEntityException {
+        try (Connection conn = dataSource.getConnection()) {
             connectionHolder.set(conn);
-            result = body.doBody();
+            T result = body.doBody();
             conn.commit();
             return result;
-        } catch (Exception e) {
-
+        } catch (SQLException e) {
+            connectionHolder.get().rollback();
+            logger.info("Exception during transaction!", e);
+            throw e;
+        } finally {
+            connectionHolder.remove();
         }
-        return result;
     }
 
     @Override
