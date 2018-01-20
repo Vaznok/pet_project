@@ -24,15 +24,15 @@ public class DataSourceForTest extends SimpleDataSource {
             logger.warn("Unsuccessful attempt to read properties from liquibase.properties file!");
         }
 
-        String drivers = props.getProperty("driver");
-        if (drivers != null) {
-            System.setProperty("driver", drivers);
-        } else {
-            logger.warn("Driver for JDBC connection was not found!");
-        }
         String url = props.getProperty("url");
         String username = props.getProperty("username");
         String password = props.getProperty("password");
+
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            logger.warn("Driver class wasn't found!");
+        }
 
         BoneCPConfig config = new BoneCPConfig();
         config.setJdbcUrl(url);

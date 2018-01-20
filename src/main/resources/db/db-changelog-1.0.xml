@@ -27,8 +27,7 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
-        <addUniqueConstraint schemaName="library"
-                             tableName="books"
+        <addUniqueConstraint tableName="books"
                              columnNames="name, author, publisher, publication_date"
                              constraintName="book_index"/>
     </changeSet>
@@ -70,16 +69,16 @@
                 <constraints nullable="false" foreignKeyName="fk_book_id" references="books(id)"/>
             </column>
             <column name="received" type="date">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="planned_return" type="date">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
-            <column name="returned" type="varchar(50)">
+            <column name="returned" type="date">
                 <constraints nullable="true" />
             </column>
             <column name="penalty" type="int">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
         </createTable>
     </changeSet>

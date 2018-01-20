@@ -2,7 +2,7 @@ package com.epam.rd.november2017.vlasenko.dao.jdbc.repository;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.DataSourceForTest;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.BookRepository;
+import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.BookDaoImpl;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandlerImpl;
 import com.epam.rd.november2017.vlasenko.entity.Book;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class BookRepositoryTest {
-    private TransactionHandlerImpl transaction = new TransactionHandlerImpl(new DataSourceForTest());
-    private BookRepository sut = new BookRepository(transaction);
+public class BookDaoImplTest {
+   /* private TransactionHandlerImpl transaction = new TransactionHandlerImpl(new DataSourceForTest());
+    private BookDaoImpl sut = new BookDaoImpl(transaction);
 
     @BeforeEach
     public void truncateTableDb() throws SQLException, NoSuchEntityException {
@@ -79,6 +79,83 @@ public class BookRepositoryTest {
         assertThrows(NoSuchEntityException.class, ()-> {
             transaction.doInTransaction(() -> sut.find(100));
         });
+    }
+
+    @Test
+    public void findByPartName_ListOfFoundBooksReturned() throws SQLException, NoSuchEntityException {
+        List<Book> booksList = new ArrayList<Book>(){
+            {
+                add(new Book("Before They Are Hanged",
+                        "Joe Abercrombie",
+                        "Gollancz",
+                        "2006-05-04"));
+                add(new Book("Before They Are Hanged 2",
+                        "Joe Abercrombie",
+                        "Gollancz",
+                        "2009-11-02"));
+                add(new Book("Everything Is Negotiable",
+                        "Gavin Kennedy",
+                        "Brixol",
+                        "1995-06-21"));
+            }
+        };
+        List<Book> foundBooks = transaction.doInTransaction(() -> {
+            sut.create(booksList);
+            return (List<Book>) sut.findByName("Hanged");
+        });
+        booksList.remove(2);
+        assertArrayEquals(booksList.toArray(), foundBooks.toArray());
+    }
+
+    @Test
+    public void findByPartAuthor_ListOfFoundBooksReturned() throws SQLException, NoSuchEntityException {
+        List<Book> booksList = new ArrayList<Book>(){
+            {
+                add(new Book("Before They Are Hanged",
+                        "Joe Abercrombie",
+                        "Gollancz",
+                        "2006-05-04"));
+                add(new Book("Before They Are Hanged 2",
+                        "Joe Abercrombie",
+                        "Gollancz",
+                        "2009-11-02"));
+                add(new Book("Everything Is Negotiable",
+                        "Gavin Kennedy",
+                        "Brixol",
+                        "1995-06-21"));
+            }
+        };
+        List<Book> foundBooks = transaction.doInTransaction(() -> {
+            sut.create(booksList);
+            return (List<Book>) sut.findByAuthor("Joe");
+        });
+        booksList.remove(2);
+        assertArrayEquals(booksList.toArray(), foundBooks.toArray());
+    }
+
+    @Test
+    public void findAll_ListOfFoundBooksReturned() throws SQLException, NoSuchEntityException {
+        List<Book> booksList = new ArrayList<Book>(){
+            {
+                add(new Book("Before They Are Hanged",
+                        "Joe Abercrombie",
+                        "Gollancz",
+                        "2006-05-04"));
+                add(new Book("Before They Are Hanged 2",
+                        "Joe Abercrombie",
+                        "Gollancz",
+                        "2009-11-02"));
+                add(new Book("Everything Is Negotiable",
+                        "Gavin Kennedy",
+                        "Brixol",
+                        "1995-06-21"));
+            }
+        };
+        List<Book> foundBooks = transaction.doInTransaction(() -> {
+            sut.create(booksList);
+            return (List<Book>) sut.findAll();
+        });
+        assertArrayEquals(booksList.toArray(), foundBooks.toArray());
     }
 
     @Test
@@ -161,6 +238,6 @@ public class BookRepositoryTest {
                 return null;
             })
         );
-    }
+    }*/
 }
 

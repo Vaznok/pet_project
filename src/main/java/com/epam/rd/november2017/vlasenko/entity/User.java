@@ -3,15 +3,26 @@ package com.epam.rd.november2017.vlasenko.entity;
 public class User {
     private String email;
     private String nickName;
-    private UserRole role;
+    private String password;
+    private String role;
+    private boolean isBlocked;
     private String firstName;
     private String lastName;
     private String contact;
 
-    public User(String email, String nickName, UserRole role) {
+    public User(String email, String nickName, String password, UserRole role, boolean isBlocked, String firstName, String lastName, String contact) {
+        this(email, nickName, password, role);
+        this.isBlocked = isBlocked;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.contact = contact;
+    }
+
+    public User(String email, String nickName, String password, UserRole role) {
         this.email = email;
         this.nickName = nickName;
-        this.role = role;
+        this.password = password;
+        this.role = role.name();
     }
 
     @Override
@@ -29,16 +40,11 @@ public class User {
         return email.hashCode();
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
+    @Override
+    public String toString() {
+        return "User{" +
+                "nickName='" + nickName + '\'' +
+                '}';
     }
 
     public String getEmail() {
@@ -49,8 +55,16 @@ public class User {
         return nickName;
     }
 
-    public UserRole getRole() {
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRole() {
         return role;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
     }
 
     public String getFirstName() {

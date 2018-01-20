@@ -41,6 +41,17 @@ public class Book {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "name='" + name + '\'' +
+                ", author='" + author + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", publicationDate='" + publicationDate + '\'' +
+                ", count=" + count +
+                '}';
+    }
+
     public String getName() {
         return name;
     }
