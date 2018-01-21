@@ -31,7 +31,7 @@ public class DataSourceForTest extends SimpleDataSource {
         try {
             Class.forName("org.mariadb.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            logger.warn("Driver class wasn't found!");
+            logger.warn("Driver class wasn't found!", e.getMessage());
         }
 
         BoneCPConfig config = new BoneCPConfig();

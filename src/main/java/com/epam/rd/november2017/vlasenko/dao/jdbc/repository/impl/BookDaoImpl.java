@@ -15,7 +15,7 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
     private static final String FIND_BOOK_ID = "SELECT * FROM books WHERE id = ?;";
     private static final String FIND_BOOK_NAME = "SELECT * FROM books WHERE name LIKE ?;";
     private static final String FIND_BOOK_AUTHOR = "SELECT * FROM books WHERE author LIKE ?;";
-    private static final String FIND_BOOK_ALL = "SELECT * FROM books;";
+    private static final String FIND_ALL_BOOK = "SELECT * FROM books;";
     private static final String UPDATE_BOOK = "UPDATE books SET name=?, author=?, publisher=?, publication_date=?, count=? WHERE id=?;";
     private static final String REMOVE_BOOK = "DELETE FROM books WHERE id=?;";
 
@@ -60,6 +60,7 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
                             rs.getString("publisher"),
                             rs.getString("publication_date"),
                             rs.getInt("count"));
+                    foundBook.setId(rs.getInt("id"));
                 }
             }
             if (foundBook == null) {
@@ -82,6 +83,7 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
                             rs.getString("publisher"),
                             rs.getString("publication_date"),
                             rs.getInt("count"));
+                    foundBook.setId(rs.getInt("id"));
                     list.add(foundBook);
                 }
             }
@@ -105,6 +107,7 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
                             rs.getString("publisher"),
                             rs.getString("publication_date"),
                             rs.getInt("count"));
+                    foundBook.setId(rs.getInt("id"));
                     list.add(foundBook);
                 }
             }
@@ -118,7 +121,7 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
     @Override
     public Iterable<Book> findAll() throws SQLException {
         List<Book> list = new LinkedList<>();
-        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_BOOK_ALL)) {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_ALL_BOOK)) {
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
                     Book foundBook = new Book(rs.getString("name"),
@@ -126,6 +129,7 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
                             rs.getString("publisher"),
                             rs.getString("publication_date"),
                             rs.getInt("count"));
+                    foundBook.setId(rs.getInt("id"));
                     list.add(foundBook);
                 }
             }

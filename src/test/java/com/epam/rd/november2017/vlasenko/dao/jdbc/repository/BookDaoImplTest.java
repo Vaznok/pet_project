@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BookDaoImplTest {
-   /* private TransactionHandlerImpl transaction = new TransactionHandlerImpl(new DataSourceForTest());
+    private TransactionHandlerImpl transaction = new TransactionHandlerImpl(new DataSourceForTest());
     private BookDaoImpl sut = new BookDaoImpl(transaction);
 
     @BeforeEach
@@ -238,6 +238,6 @@ public class BookDaoImplTest {
                 return null;
             })
         );
-    }*/
+    }
 }
 

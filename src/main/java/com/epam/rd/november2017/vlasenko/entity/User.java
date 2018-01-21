@@ -1,6 +1,9 @@
 package com.epam.rd.november2017.vlasenko.entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private Integer id;
     private String email;
     private String nickName;
     private String password;
@@ -10,7 +13,14 @@ public class User {
     private String lastName;
     private String contact;
 
-    public User(String email, String nickName, String password, UserRole role, boolean isBlocked, String firstName, String lastName, String contact) {
+    public enum Role {
+        REGISTERED_USER,
+        LIBRARIAN,
+        ADMINISTRATOR
+    }
+
+
+    public User(String email, String nickName, String password, Role role, boolean isBlocked, String firstName, String lastName, String contact) {
         this(email, nickName, password, role);
         this.isBlocked = isBlocked;
         this.firstName = firstName;
@@ -18,7 +28,7 @@ public class User {
         this.contact = contact;
     }
 
-    public User(String email, String nickName, String password, UserRole role) {
+    public User(String email, String nickName, String password, Role role) {
         this.email = email;
         this.nickName = nickName;
         this.password = password;
@@ -45,6 +55,10 @@ public class User {
         return "User{" +
                 "nickName='" + nickName + '\'' +
                 '}';
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -77,5 +91,9 @@ public class User {
 
     public String getContact() {
         return contact;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

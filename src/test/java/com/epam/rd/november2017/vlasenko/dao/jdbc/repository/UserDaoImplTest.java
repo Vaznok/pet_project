@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.epam.rd.november2017.vlasenko.entity.UserRole.REGISTERED_USER;
+import static com.epam.rd.november2017.vlasenko.entity.User.Role.REGISTERED_USER;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,6 +87,19 @@ public class UserDaoImplTest {
     }
 
     @Test
+    public void findAuthorizedUser() throws SQLException, NoSuchEntityException {
+        User user = new User("grozniy.vasya@gmail.com", "Gordon", "qwerty", REGISTERED_USER);
+
+        User foundUser = transaction.doInTransaction(() -> {
+            sut.create(user);
+            return sut.findAuthorizedUser("grozniy.vasya@gmail.com".toCharArray(), "qwerty".toCharArray());
+        });
+
+        assertEquals(user, foundUser);
+
+    }
+
+    @Test
     public void updateUserById_FindUpdatedUser() throws SQLException, NoSuchEntityException {
         User createUser = new User("grozniy.vasya@gmail.com", "Gordon", "qwerty", REGISTERED_USER);
         User updateUser = new User("grozniy.vasya@gmail.com", "Gordon", "superpassword", REGISTERED_USER);
@@ -111,7 +124,7 @@ public class UserDaoImplTest {
         );
     }
 
-   /* @Test
+    /*@Test
     public void deleteUserById_FindDeletedUserThrowNoSuchEntityException() throws SQLException {
         User user = new User("grozniy.vasya@gmail.com", "Gordon", "superpassword", REGISTERED_USER);
 

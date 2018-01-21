@@ -3,7 +3,6 @@ package com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.UserDao;
 import com.epam.rd.november2017.vlasenko.entity.User;
-import com.epam.rd.november2017.vlasenko.entity.UserRole;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -21,18 +20,15 @@ public class UserDaoImpl implements UserDao<User, Integer> {
     private static final String FIND_USER_ID = "SELECT * FROM users WHERE id = ?;";
     private static final String CREATE_USER_ORDER = "INSERT INTO users_books (user_id, book_id, status) VALUES(?, ?, ?);";
     private static final String SHOW_BORROWED_BOOKS = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id WHERE orders.status='NEW' AND orders.user_id=2;";
-    private static final String FIND_USER_ALL = "SELECT * FROM users;";
+    private static final String FIND_ALL_USER = "SELECT * FROM users;";
     private static final String UPDATE_USER = "UPDATE users SET email=?, nick_name=?, password=?, role=?, block=?, first_name=?, last_name=?, contact=? WHERE id=?;";
     private static final String REMOVE_USER = "DELETE FROM users WHERE id=?;";
+    private static final String FIND_AUTHORIZED_USER = "SELECT * FROM users WHERE email=? AND password=?;";
 
     private DataSource dataSource;
 
     public UserDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
-    }
-
-    public void librarian() {
-
     }
 
     @Override
@@ -43,6 +39,32 @@ public class UserDaoImpl implements UserDao<User, Integer> {
             stat.setString(3, NEW.name());
 
             stat.executeQuery();
+        }
+    }
+
+    @Override
+    public User findAuthorizedUser(char[] email, char[] password) throws SQLException, NoSuchEntityException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_AUTHORIZED_USER)) {
+            stat.setString(1, String.valueOf(email));
+            stat.setString(2, String.valueOf(password));
+            User foundUser = null;
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    foundUser = new User(rs.getString("email"),
+                            rs.getString("nick_name"),
+                            rs.getString("password"),
+                            User.Role.valueOf(rs.getString("role")),
+                            rs.getBoolean("block"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
+                            rs.getString("contact"));
+                    foundUser.setId(rs.getInt("id"));
+                }
+            }
+            if (foundUser == null) {
+                throw new NoSuchEntityException();
+            }
+            return foundUser;
         }
     }
 
@@ -82,43 +104,45 @@ public class UserDaoImpl implements UserDao<User, Integer> {
 
     @Override
     public User find(Integer id) throws SQLException, NoSuchEntityException {
-        User user = null;
+        User foundUser = null;
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_USER_ID)) {
             stat.setInt(1, id);
 
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
-                    user = new User(rs.getString("email"),
+                    foundUser = new User(rs.getString("email"),
                                     rs.getString("nick_name"),
                                     rs.getString("password"),
-                                    UserRole.valueOf(rs.getString("role")),
+                                    User.Role.valueOf(rs.getString("role")),
                                     rs.getBoolean("block"),
                                     rs.getString("first_name"),
                                     rs.getString("last_name"),
                                     rs.getString("contact"));
+                    foundUser.setId(rs.getInt("id"));
                 }
             }
-            if (user == null) {
+            if (foundUser == null) {
                 throw new NoSuchEntityException();
             }
         }
-        return user;
+        return foundUser;
     }
 
     @Override
     public Iterable<User> findAll() throws SQLException {
         List<User> list = new LinkedList<>();
-        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_USER_ALL)) {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_ALL_USER)) {
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
                     User foundUser = new User(rs.getString("email"),
                                             rs.getString("nick_name"),
                                             rs.getString("password"),
-                                            UserRole.valueOf(rs.getString("role")),
+                                            User.Role.valueOf(rs.getString("role")),
                                             rs.getBoolean("block"),
                                             rs.getString("first_name"),
                                             rs.getString("last_name"),
                                             rs.getString("contact"));
+                    foundUser.setId(rs.getInt("id"));
                     list.add(foundUser);
                 }
             }

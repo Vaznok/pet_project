@@ -4,6 +4,6 @@
         <title>Error</title>
     </head>
     <body>
-        <h3>Sorry for unconvinced, the page is going to work soon!</h3>
+        <h3>Sorry for the inconveniences, the page is going to work soon!</h3>
     </body>
 </html>

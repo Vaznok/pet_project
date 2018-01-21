@@ -1,6 +1,7 @@
 package com.epam.rd.november2017.vlasenko.entity;
 
 public class Book {
+    private Integer id;
     private String name;
     private String author;
     private String publisher;
@@ -52,6 +53,10 @@ public class Book {
                 '}';
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -70,5 +75,9 @@ public class Book {
 
     public int getCount() {
         return count;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
