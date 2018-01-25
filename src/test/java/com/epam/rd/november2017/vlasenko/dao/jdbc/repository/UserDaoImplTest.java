@@ -34,12 +34,36 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void createNewUser_FindCreatedUser() throws SQLException, NoSuchEntityException {
+    public void createNewUser_FindCreatedUserById() throws SQLException, NoSuchEntityException {
         User user = new User("grozniy.vasya@gmail.com", "Gordon", "qwerty", REGISTERED_USER);
 
         User foundUser = transaction.doInTransaction(() -> {
             sut.create(user);
             return sut.find(1);
+        });
+
+        assertEquals(user, foundUser);
+    }
+
+    @Test
+    public void createNewUser_FindCreatedUserByNickName() throws SQLException, NoSuchEntityException {
+        User user = new User("grozniy.vasya@gmail.com", "Gordon", "qwerty", REGISTERED_USER);
+
+        User foundUser = transaction.doInTransaction(() -> {
+            sut.create(user);
+            return sut.findUserByNickName("Gordon");
+        });
+
+        assertEquals(user, foundUser);
+    }
+
+    @Test
+    public void createNewUser_FindCreatedUserByEmail() throws SQLException, NoSuchEntityException {
+        User user = new User("grozniy.vasya@gmail.com", "Gordon", "qwerty", REGISTERED_USER);
+
+        User foundUser = transaction.doInTransaction(() -> {
+            sut.create(user);
+            return sut.findUserByEmail("grozniy.vasya@gmail.com");
         });
 
         assertEquals(user, foundUser);
@@ -92,7 +116,7 @@ public class UserDaoImplTest {
 
         User foundUser = transaction.doInTransaction(() -> {
             sut.create(user);
-            return sut.findAuthorizedUser("grozniy.vasya@gmail.com".toCharArray(), "qwerty".toCharArray());
+            return sut.findAuthorizedUser("grozniy.vasya@gmail.com", "qwerty");
         });
 
         assertEquals(user, foundUser);

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter("/account")
+@WebFilter(servletNames = "AccountServlet")
 public class AccountFilter extends BaseFilter {
     private static final String REDIRECT = "welcome.jsp";
 
@@ -25,7 +25,7 @@ public class AccountFilter extends BaseFilter {
                 chain.doFilter(request, response);
             }
         } catch (NullPointerException e) {
-            response.sendRedirect(REDIRECT);
+            response.sendRedirect(request.getContextPath());
         }
     }
 }

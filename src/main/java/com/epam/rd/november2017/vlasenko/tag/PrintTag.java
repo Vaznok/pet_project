@@ -5,7 +5,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
 
-public class LoginTag extends TagSupport {
+public class PrintTag extends TagSupport {
 
     private String result;
 
@@ -13,7 +13,7 @@ public class LoginTag extends TagSupport {
     public int doStartTag() throws JspException {
         try {
             if (result.length() > 0) {
-                pageContext.getOut().write("Invalid username or password");
+                pageContext.getOut().write(result);
             }
         } catch (IOException e) {
             throw new JspException(e.getMessage());

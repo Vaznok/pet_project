@@ -12,7 +12,7 @@ import java.io.IOException;
 import static com.epam.rd.november2017.vlasenko.entity.User.Role.ADMINISTRATOR;
 import static com.epam.rd.november2017.vlasenko.entity.User.Role.LIBRARIAN;
 
-@WebFilter("/librarian")
+@WebFilter(servletNames = "LibrarianServlet")
 public class LibrarianFilter extends BaseFilter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {

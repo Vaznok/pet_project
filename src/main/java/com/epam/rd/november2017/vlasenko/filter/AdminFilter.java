@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static com.epam.rd.november2017.vlasenko.entity.User.Role.ADMINISTRATOR;
 
-@WebFilter("/admin")
+@WebFilter(servletNames = "AdminServlet")
 public class AdminFilter extends BaseFilter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {

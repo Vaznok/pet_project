@@ -7,11 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/")
-public class WelcomeServlet extends HttpServlet {
+@WebServlet(name = "AccountServlet", urlPatterns = "/account")
+public class AccountServlet extends HttpServlet {
+    private static final String ACCOUNT_JSP = "account.jsp";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("welcome.jsp");
+
+        req.getRequestDispatcher(ACCOUNT_JSP).forward(req, resp);
     }
 }

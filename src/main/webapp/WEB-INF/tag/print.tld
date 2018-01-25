@@ -9,8 +9,8 @@
     <short-name>login</short-name>
 
     <tag>
-        <name>login</name>
-        <tag-class>com.epam.rd.november2017.vlasenko.tag.LoginTag</tag-class>
+        <name>print</name>
+        <tag-class>com.epam.rd.november2017.vlasenko.tag.PrintTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
             <name>result</name>

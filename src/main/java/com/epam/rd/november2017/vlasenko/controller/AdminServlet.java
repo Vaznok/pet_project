@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/admin")
+@WebServlet(name = "AdminServlet", urlPatterns = "/admin")
 public class AdminServlet extends HttpServlet {
-    private static final String PAGE_OK = "admin.jsp";
+    private static final String ADMIN_JSP = "admin.jsp";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(PAGE_OK).forward(req, resp);
+        req.getRequestDispatcher(ADMIN_JSP).forward(req, resp);
     }
 }
