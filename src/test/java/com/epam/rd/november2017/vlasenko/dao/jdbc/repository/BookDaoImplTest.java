@@ -1,7 +1,6 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.DataSourceForTest;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.BookDaoImpl;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandlerImpl;
 import com.epam.rd.november2017.vlasenko.entity.Book;
@@ -12,17 +11,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BookDaoImplTest {
     private TransactionHandlerImpl transaction = new TransactionHandlerImpl(new DataSourceForTest());
     private BookDaoImpl sut = new BookDaoImpl(transaction);
 
     @BeforeEach
-    public void truncateTableDb() throws SQLException, NoSuchEntityException {
+    public void truncateTableDb() throws SQLException {
         transaction.doInTransaction(() -> {
             try (Statement stat = transaction.getConnection().createStatement()) {
                 stat.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
@@ -33,7 +30,7 @@ public class BookDaoImplTest {
     }
 
     @Test
-    public void createNewBook_FindCreatedBook() throws SQLException, NoSuchEntityException {
+    public void createNewBook_FindCreatedBook() throws SQLException {
         Book book = new Book("Before They Are Hanged",
                             "Joe Abercrombie",
                             "Gollancz",
@@ -48,7 +45,7 @@ public class BookDaoImplTest {
     }
 
     @Test
-    public void createNewBooks_FindCreatedBooks() throws SQLException, NoSuchEntityException {
+    public void createNewBooks_FindCreatedBooks() throws SQLException {
         List<Book> booksList = new ArrayList<Book>(){
             {
                 add(new Book("Before They Are Hanged",
@@ -75,14 +72,7 @@ public class BookDaoImplTest {
     }
 
     @Test
-    public void findBookByNotExistedId_NoSuchEntityExceptionThrown() throws SQLException {
-        assertThrows(NoSuchEntityException.class, ()-> {
-            transaction.doInTransaction(() -> sut.find(100));
-        });
-    }
-
-    @Test
-    public void findByPartName_ListOfFoundBooksReturned() throws SQLException, NoSuchEntityException {
+    public void findByPartName_ListOfFoundBooksReturned() throws SQLException {
         List<Book> booksList = new ArrayList<Book>(){
             {
                 add(new Book("Before They Are Hanged",
@@ -108,7 +98,7 @@ public class BookDaoImplTest {
     }
 
     @Test
-    public void findByPartAuthor_ListOfFoundBooksReturned() throws SQLException, NoSuchEntityException {
+    public void findByPartAuthor_ListOfFoundBooksReturned() throws SQLException {
         List<Book> booksList = new ArrayList<Book>(){
             {
                 add(new Book("Before They Are Hanged",
@@ -134,7 +124,7 @@ public class BookDaoImplTest {
     }
 
     @Test
-    public void findAll_ListOfFoundBooksReturned() throws SQLException, NoSuchEntityException {
+    public void findAll_ListOfFoundBooksReturned() throws SQLException {
         List<Book> booksList = new ArrayList<Book>(){
             {
                 add(new Book("Before They Are Hanged",
@@ -159,32 +149,7 @@ public class BookDaoImplTest {
     }
 
     @Test
-    public void findListOfBookWithNotExistedId_NoSuchEntityExceptionThrown() throws SQLException {
-        List<Book> booksList = new ArrayList<Book>(){
-            {
-                add(new Book("Before They Are Hanged",
-                            "Joe Abercrombie",
-                            "Gollancz",
-                            "2006-05-04"));
-                add(new Book("Influence: The Psychology of Persuasion",
-                            "Robert B. Cialdini",
-                            "Robert B. Cialdini",
-                            "1990-11-18"));
-                add(new Book("Everything Is Negotiable",
-                            "Gavin Kennedy",
-                            "Brixol",
-                            "1995-06-21"));
-            }
-        };
-        assertThrows(NoSuchEntityException.class, ()-> transaction.doInTransaction(() -> {
-                sut.create(booksList);
-                return sut.find(asList(1, 2, 100));
-            })
-        );
-    }
-
-    @Test
-    public void updateBookById_FindUpdatedBook() throws SQLException, NoSuchEntityException {
+    public void updateBookById_FindUpdatedBook() throws SQLException {
         Book createBook = new Book("Before They Are Hanged",
                                 "Don Kihot",
                                 "Gollancz",
@@ -200,44 +165,6 @@ public class BookDaoImplTest {
         });
 
         assertEquals(updateBook, foundBook);
-    }
-
-    @Test
-    public void updateBookByNotExistedId_NoSuchEntityExceptionThrown() throws SQLException {
-        Book updateBook = new Book("Before They Are Hanged",
-                                "Joe Abercrombie",
-                                "Gollancz",
-                                "2006-05-04");
-
-        assertThrows(NoSuchEntityException.class, ()-> transaction.doInTransaction(() -> {
-                sut.update(100, updateBook);
-                return null;
-            })
-        );
-    }
-
-    @Test
-    public void deleteBookById_FindDeletedBookThrowNoSuchEntityException() throws SQLException {
-        Book book = new Book("Before They Are Hanged",
-                            "Joe Abercrombie",
-                            "Gollancz",
-                            "2006-05-04");
-
-        assertThrows(NoSuchEntityException.class, ()-> transaction.doInTransaction(() -> {
-                sut.create(book);
-                sut.delete(1);
-                return sut.find(1);
-            })
-        );
-    }
-
-    @Test
-    public void deleteBookByNotExistedId_NoSuchEntityExceptionThrown() throws SQLException {
-        assertThrows(NoSuchEntityException.class, ()-> transaction.doInTransaction(() -> {
-                sut.delete(100);
-                return null;
-            })
-        );
     }
 }
 

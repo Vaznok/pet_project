@@ -1,9 +1,8 @@
 package com.epam.rd.november2017.vlasenko.controller;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
 import com.epam.rd.november2017.vlasenko.entity.User;
-import com.epam.rd.november2017.vlasenko.service.authentication.AuthenticationService;
-import com.epam.rd.november2017.vlasenko.service.encryption.EncryptionService;
+import com.epam.rd.november2017.vlasenko.service.authentication.AuthenticationServiceImpl;
+import com.epam.rd.november2017.vlasenko.service.encryption.EncryptionServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +22,9 @@ public class LoginServlet extends HttpServlet {
     private static final String SESSION_ATTRIBUTE_USER = "user";
     private static final String REQ_ATTR_NO_LOGIN = "noLogin";
     private static final String PAGE_NO_LOGIN = "login.jsp";
-    private static final String PAGE_ERROR = "error.jsp";
 
-    private AuthenticationService authentication = new AuthenticationService();
-    private EncryptionService encryption = new EncryptionService();
+    private AuthenticationServiceImpl authentication = new AuthenticationServiceImpl();
+    private EncryptionServiceImpl encryption = new EncryptionServiceImpl();
 
     private static Logger logger = LoggerFactory.getLogger(LoginServlet.class.getSimpleName());
 
@@ -40,7 +38,7 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        //return value 'null' means that validation is successful otherwise return a description of the inconsistencies
+        //return value 'null' means that validateOrderConfirmation is successful otherwise return a description of the inconsistencies
         String validationResult = authentication.validateSyntax(email, password);
         if (nonNull(validationResult)) {
             request.setAttribute(REQ_ATTR_NO_LOGIN, validationResult);
@@ -51,14 +49,8 @@ public class LoginServlet extends HttpServlet {
         try {
             user = authentication.getUser(email, password);
         } catch (SQLException e) {
-            logger.error(e.getMessage());
-            response.setStatus(500);
-            response.sendRedirect(PAGE_ERROR);
-            return;
-        } catch (NoSuchEntityException e) {
-            logger.debug(e.getMessage());
-            request.setAttribute(REQ_ATTR_NO_LOGIN, "No account for this email and password!");
-            request.getRequestDispatcher(PAGE_NO_LOGIN).forward(request, response);
+            logger.error("Login error.", e);
+            response.sendError(500);
             return;
         }
         if (user != null) {
@@ -66,6 +58,9 @@ public class LoginServlet extends HttpServlet {
             response.addCookie(new Cookie("password", encryption.encrypt(password)));
             request.getSession().setAttribute(SESSION_ATTRIBUTE_USER, user);
             response.sendRedirect(request.getContextPath());
+        } else {
+            request.setAttribute(REQ_ATTR_NO_LOGIN, "No account for this email and password!");
+            request.getRequestDispatcher(PAGE_NO_LOGIN).forward(request, response);
         }
     }
 }

@@ -20,7 +20,7 @@ public class LibrarianFilter extends BaseFilter {
 
         try {
             User user = (User) session.getAttribute("user");
-            String userRole = user.getRole();
+            String userRole = user.getRole().name();
             if((userRole.equals(LIBRARIAN.name()) || userRole.equals(ADMINISTRATOR.name())) && !user.isBlocked()) {
                 chain.doFilter(request, response);
             } else {

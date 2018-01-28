@@ -1,10 +1,8 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.transaction;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
-
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
 public interface TransactionHandler extends DataSource {
-    <T> T doInTransaction (TransactionBody<T> unitOfWork) throws SQLException, NoSuchEntityException;
+    <T> T doInTransaction (TransactionBody<T> unitOfWork) throws SQLException;
 }

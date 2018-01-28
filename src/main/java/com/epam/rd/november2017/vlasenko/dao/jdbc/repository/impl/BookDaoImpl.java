@@ -1,6 +1,5 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.BookDao;
 import com.epam.rd.november2017.vlasenko.entity.Book;
 
@@ -9,7 +8,7 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BookDaoImpl implements BookDao<Book, Integer> {
+public class BookDaoImpl implements BookDao {
     private static final String ADD_BOOK = "INSERT INTO books (name, author, publisher, publication_date, count) VALUES(?, ?, ?, ?, ?) " +
             "ON DUPLICATE KEY UPDATE count = count + ?;";
     private static final String FIND_BOOK_ID = "SELECT * FROM books WHERE id = ?;";
@@ -48,7 +47,7 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
     }
 
     @Override
-    public Book find(Integer id) throws SQLException, NoSuchEntityException {
+    public Book find(Integer id) throws SQLException {
         Book foundBook = null;
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_BOOK_ID)) {
             stat.setInt(1, id);
@@ -63,82 +62,40 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
                     foundBook.setId(rs.getInt("id"));
                 }
             }
-            if (foundBook == null) {
-                throw new NoSuchEntityException();
-            }
         }
         return foundBook;
     }
 
     @Override
-    public Iterable<Book> findByName(String name) throws SQLException, NoSuchEntityException {
-        List<Book> list = new LinkedList<>();
+    public Iterable<Book> findByName(String name) throws SQLException {
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_BOOK_NAME)) {
             name = "%" + name + "%";
             stat.setString(1, name);
-            try (ResultSet rs = stat.executeQuery()) {
-                while (rs.next()) {
-                    Book foundBook = new Book(rs.getString("name"),
-                            rs.getString("author"),
-                            rs.getString("publisher"),
-                            rs.getString("publication_date"),
-                            rs.getInt("count"));
-                    foundBook.setId(rs.getInt("id"));
-                    list.add(foundBook);
-                }
-            }
-            if (list.isEmpty()) {
-                throw new NoSuchEntityException();
-            }
+
+            return selectUserQuery(stat);
         }
-        return list;
     }
 
     @Override
-    public Iterable<Book> findByAuthor(String author) throws SQLException, NoSuchEntityException {
-        List<Book> list = new LinkedList<>();
+    public Iterable<Book> findByAuthor(String author) throws SQLException {
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_BOOK_AUTHOR)) {
             author = "%" + author + "%";
+
             stat.setString(1, author);
-            try (ResultSet rs = stat.executeQuery()) {
-                while (rs.next()) {
-                    Book foundBook = new Book(rs.getString("name"),
-                            rs.getString("author"),
-                            rs.getString("publisher"),
-                            rs.getString("publication_date"),
-                            rs.getInt("count"));
-                    foundBook.setId(rs.getInt("id"));
-                    list.add(foundBook);
-                }
-            }
-            if (list.isEmpty()) {
-                throw new NoSuchEntityException();
-            }
+
+            return selectUserQuery(stat);
         }
-        return list;
     }
 
     @Override
     public Iterable<Book> findAll() throws SQLException {
-        List<Book> list = new LinkedList<>();
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_ALL_BOOK)) {
-            try (ResultSet rs = stat.executeQuery()) {
-                while (rs.next()) {
-                    Book foundBook = new Book(rs.getString("name"),
-                            rs.getString("author"),
-                            rs.getString("publisher"),
-                            rs.getString("publication_date"),
-                            rs.getInt("count"));
-                    foundBook.setId(rs.getInt("id"));
-                    list.add(foundBook);
-                }
-            }
+            return selectUserQuery(stat);
         }
-        return list;
     }
 
     @Override
-    public Iterable<Book> find(Iterable<Integer> ids) throws SQLException, NoSuchEntityException {
+    public Iterable<Book> find(Iterable<Integer> ids) throws SQLException {
         List<Book> list = new LinkedList<>();
 
         for (Integer id : ids) {
@@ -149,7 +106,7 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
     }
 
     @Override
-    public void update(Integer id, Book book) throws SQLException, NoSuchEntityException {
+    public boolean update(Integer id, Book book) throws SQLException {
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(UPDATE_BOOK)) {
             stat.setString(1, book.getName());
             stat.setString(2, book.getAuthor());
@@ -160,22 +117,34 @@ public class BookDaoImpl implements BookDao<Book, Integer> {
 
             int checkUpdate = stat.executeUpdate();
 
-            if (checkUpdate == 0) {
-                throw new NoSuchEntityException();
-            }
+            return checkUpdate != 0;
         }
     }
 
     @Override
-    public void delete(Integer id) throws SQLException, NoSuchEntityException {
+    public boolean delete(Integer id) throws SQLException {
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(REMOVE_BOOK)) {
             stat.setInt(1, id);
 
             int checkUpdate = stat.executeUpdate();
 
-            if (checkUpdate == 0) {
-                throw new NoSuchEntityException();
+            return checkUpdate != 0;
+        }
+    }
+
+    private Iterable<Book> selectUserQuery(PreparedStatement stat) throws SQLException {
+        try (ResultSet rs = stat.executeQuery()) {
+            List<Book> list = new LinkedList<>();
+            while (rs.next()) {
+                Book foundBook = new Book(rs.getString("name"),
+                        rs.getString("author"),
+                        rs.getString("publisher"),
+                        rs.getString("publication_date"),
+                        rs.getInt("count"));
+                foundBook.setId(rs.getInt("id"));
+                list.add(foundBook);
             }
+            return list;
         }
     }
 }

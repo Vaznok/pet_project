@@ -3,8 +3,8 @@
 
 <html>
 <head>
-    <title>Book catalog.</title>
-    <h3>Book catalog</h3>
+    <title>Book catalog</title>
+    <h3>Book catalog:</h3>
     <style>
         <%@include file="/WEB-INF/catalog.css"%>
     </style>

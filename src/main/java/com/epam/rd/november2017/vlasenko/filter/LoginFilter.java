@@ -1,9 +1,8 @@
 package com.epam.rd.november2017.vlasenko.filter;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
 import com.epam.rd.november2017.vlasenko.entity.User;
-import com.epam.rd.november2017.vlasenko.service.authentication.AuthenticationService;
-import com.epam.rd.november2017.vlasenko.service.encryption.EncryptionService;
+import com.epam.rd.november2017.vlasenko.service.authentication.AuthenticationServiceImpl;
+import com.epam.rd.november2017.vlasenko.service.encryption.EncryptionServiceImpl;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -22,19 +21,19 @@ public class LoginFilter extends BaseFilter{
     private final static String SESSION_ATTRIBUTE_USER = "user";
     private static final String PAGE_ERROR = "error.jsp";
 
-    private AuthenticationService authentication = new AuthenticationService();
-    private EncryptionService encryption = new EncryptionService();
+    private AuthenticationServiceImpl authentication = new AuthenticationServiceImpl();
+    private EncryptionServiceImpl encryption = new EncryptionServiceImpl();
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = request.getSession(false);
 
-        if(nonNull(session)) {
+        if (nonNull(session)) {
             Enumeration<String> attrNames = session.getAttributeNames();
             while (attrNames.hasMoreElements()) {
                 String attrName = attrNames.nextElement();
                 if (attrName.equals(SESSION_ATTRIBUTE_USER)) {
-                    if(nonNull(session.getAttribute(SESSION_ATTRIBUTE_USER))) {
+                    if (nonNull(session.getAttribute(SESSION_ATTRIBUTE_USER))) {
                         chain.doFilter(request, response);
                         return;
                     }
@@ -49,24 +48,28 @@ public class LoginFilter extends BaseFilter{
                 if (cookies[i].getName().equals("email")) {
                     emailIndex = i;
                 }
-                if(cookies[i].getName().equals("password")) {
+                if (cookies[i].getName().equals("password")) {
                     passwordIndex = i;
                 }
-                if (nonNull(emailIndex) && nonNull(passwordIndex))
-                    try {
-                        String decryptedEmail = encryption.decrypt(cookies[emailIndex].getValue());
-                        String decryptedPassword = encryption.decrypt(cookies[passwordIndex].getValue());
-                        User user = authentication.getUser(decryptedEmail, decryptedPassword);
-                        request.getSession().setAttribute(SESSION_ATTRIBUTE_USER, user);
-                    } catch (SQLException e) {
-                        response.setStatus(500);
-                        response.sendRedirect(PAGE_ERROR);
-                    } catch (NoSuchEntityException e) {
+            }
+            if (nonNull(emailIndex) && nonNull(passwordIndex)) {
+                try {
+                    String decryptedEmail = encryption.decrypt(cookies[emailIndex].getValue());
+                    String decryptedPassword = encryption.decrypt(cookies[passwordIndex].getValue());
+                    User user = authentication.getUser(decryptedEmail, decryptedPassword);
+                    request.getSession().setAttribute(SESSION_ATTRIBUTE_USER, user);
+
+                    if (user == null) {
                         cookies[emailIndex].setMaxAge(0);
                         response.addCookie(cookies[emailIndex]);
                         cookies[passwordIndex].setMaxAge(0);
                         response.addCookie(cookies[passwordIndex]);
                     }
+
+                } catch (SQLException e) {
+                    response.setStatus(500);
+                    response.sendRedirect(PAGE_ERROR);
+                }
             }
         }
         chain.doFilter(request, response);

@@ -14,10 +14,10 @@
             <column name="name" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-            <column name="author" type="varchar(50)">
+            <column name="author" type="varchar(30)">
                 <constraints nullable="false" />
             </column>
-            <column name="publisher" type="varchar(50)">
+            <column name="publisher" type="varchar(20)">
                 <constraints nullable="false" />
             </column>
             <column name="publication_date" type="date">
@@ -42,19 +42,19 @@
             <column name="email" type="varchar(50)">
                 <constraints nullable="false" unique="true" />
             </column>
-            <column name="nick_name" type="varchar(50)">
+            <column name="nick_name" type="varchar(18)">
                 <constraints nullable="false" unique="true" />
             </column>
-            <column name="role" type="varchar(50)">
+            <column name="role" type="varchar(20)">
                 <constraints nullable="false" />
             </column>
-            <column name="first_name" type="varchar(50)">
+            <column name="first_name" type="varchar(18)">
                 <constraints nullable="true" />
             </column>
-            <column name="last_name" type="varchar(50)">
+            <column name="last_name" type="varchar(18)">
                 <constraints nullable="true" />
             </column>
-            <column name="contact" type="varchar(50)">
+            <column name="contact" type="varchar(150)">
                 <constraints nullable="true" />
             </column>
         </createTable>

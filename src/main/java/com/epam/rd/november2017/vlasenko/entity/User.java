@@ -7,7 +7,7 @@ public class User implements Serializable {
     private String email;
     private String nickName;
     private String password;
-    private String role;
+    private Role role;
     private boolean isBlocked;
     private String firstName;
     private String lastName;
@@ -32,7 +32,7 @@ public class User implements Serializable {
         this.email = email;
         this.nickName = nickName;
         this.password = password;
-        this.role = role.name();
+        this.role = role;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class User implements Serializable {
         return password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 

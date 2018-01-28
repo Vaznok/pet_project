@@ -1,7 +1,6 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.transaction;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.SimpleDataSource;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,7 @@ public class TransactionHandlerImpl extends SimpleDataSource implements Transact
     }
 
     @Override
-    public <T> T doInTransaction(TransactionBody<T> body) throws SQLException, NoSuchEntityException {
+    public <T> T doInTransaction(TransactionBody<T> body) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             connectionHolder.set(conn);
             T result = body.doBody();

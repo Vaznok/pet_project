@@ -4,14 +4,15 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet id="rename_table" author="vlasenko_vitaliy">
-        <renameTable oldTableName="users_books" newTableName="orders"/>
-    </changeSet>
-
-    <changeSet id="add_column_status" author="vlasenko_vitaliy">
+    <changeSet id="add_columns_orders" author="vlasenko_vitaliy">
         <addColumn tableName="orders">
-            <column name="status" type="varchar(15)">
-                <constraints nullable="false" />
+            <column name="order_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             deleteCascade="true "/>
+            </column>
+            <column name="count" type="int">
+                <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>

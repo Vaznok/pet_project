@@ -2,8 +2,8 @@
 <%@ taglib uri="/WEB-INF/tag/print.tld" prefix="custom" %>
 <html>
     <head>
-        <title>Check-in form.</title>
-        <h2>Registration form.</h2>
+        <title>Check-in form</title>
+        <h2>Registration form:</h2>
         <style>
             <%@include file="/WEB-INF/check-in.css"%>
         </style>
@@ -38,6 +38,6 @@
             </table>
             <p><input type="submit" value="Done"></p>
         </form>
-        <h4 style="color: red"><custom:print result='${requestScope.noLogin}'/></h4>
+        <h4 style="color: red"><custom:print result='${requestScope.noRegister}'/></h4>
     </body>
 </html>

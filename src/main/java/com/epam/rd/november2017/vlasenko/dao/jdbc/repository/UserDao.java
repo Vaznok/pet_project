@@ -1,18 +1,14 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.exception.NoSuchEntityException;
+import com.epam.rd.november2017.vlasenko.entity.User;
 
 import java.sql.SQLException;
 
-public interface UserDao<T, ID> extends CrudDao<T, ID>{
+public interface UserDao extends CrudDao<User, Integer>{
 
-    void orderBook(ID userId, ID bookId) throws SQLException;
+    User findAuthorizedUser(String email, String password) throws SQLException;
 
-    Iterable<T> findBorrowedBooks(ID userId) throws SQLException, NoSuchEntityException;
+    User findUserByEmail(String email) throws SQLException;
 
-    T findAuthorizedUser(String email, String password) throws SQLException, NoSuchEntityException;
-
-    T findUserByEmail(String email) throws SQLException;
-
-    T findUserByNickName (String nickName)  throws SQLException;
+    User findUserByNickName (String nickName)  throws SQLException;
 }
