@@ -20,13 +20,13 @@ public class AdminFilter extends BaseFilter {
         try {
             User user = (User) session.getAttribute("user");
 
-            if(user.getRole().equals(ADMINISTRATOR.name()) && !user.isBlocked()) {
+            if(user.getRole().name().equals(ADMINISTRATOR.name()) && !user.isBlocked()) {
                 chain.doFilter(request, response);
             } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                response.sendError(404);
             }
         } catch (NullPointerException e) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            response.sendError(404);
         }
     }
 }

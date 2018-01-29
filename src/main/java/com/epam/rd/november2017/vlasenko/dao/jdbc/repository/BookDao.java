@@ -10,5 +10,8 @@ public interface BookDao extends CrudDao<Book, Integer> {
 
     Iterable<Book> findByAuthor (String author) throws SQLException;
 
+    Iterable<Book> findAllExisted () throws SQLException;
+
+    boolean isBookExist(Book book) throws SQLException;
 }
 

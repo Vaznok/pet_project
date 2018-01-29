@@ -1,8 +1,7 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.DataSourceForTest;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.UserDaoImpl;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandlerImpl;
+import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandler;
 import com.epam.rd.november2017.vlasenko.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.TRANSACTION_TEST;
 import static com.epam.rd.november2017.vlasenko.entity.User.Role.REGISTERED_USER;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserDaoImplTest {
-    private TransactionHandlerImpl transaction = new TransactionHandlerImpl(new DataSourceForTest());
-    private UserDaoImpl sut = new UserDaoImpl(transaction);
+    private TransactionHandler transaction = TRANSACTION_TEST;
+    private UserDao sut = new UserDaoImpl(transaction);
 
     @BeforeEach
     public void truncateTableDb() throws SQLException {

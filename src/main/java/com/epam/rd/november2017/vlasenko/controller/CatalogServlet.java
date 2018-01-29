@@ -18,7 +18,7 @@ import java.util.List;
 @WebServlet("/catalog")
 public class CatalogServlet extends HttpServlet {
     private static final String REQ_ATTR_BOOKS = "books";
-    private static final String DISPATCH_PAGE = "catalog.jsp";
+    private static final String CATALOG_JSP = "catalog.jsp";
 
     private BookServiceImpl bookService = new BookServiceImpl();
 
@@ -30,7 +30,7 @@ public class CatalogServlet extends HttpServlet {
             resp.setContentType("text/html");
             List<Book> bookList = (List<Book>) bookService.findAll();
             req.setAttribute(REQ_ATTR_BOOKS, bookList);
-            RequestDispatcher dispatcher = req.getRequestDispatcher(DISPATCH_PAGE);
+            RequestDispatcher dispatcher = req.getRequestDispatcher(CATALOG_JSP);
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
             logger.error("Book catalog doesn't work!", e);

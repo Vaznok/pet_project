@@ -16,6 +16,8 @@ public class UserDaoImpl implements UserDao {
     private static final String FIND_USER_ID = "SELECT * FROM users WHERE id = ?;";
     private static final String FIND_USER_EMAIL = "SELECT * FROM users WHERE email = ?;";
     private static final String FIND_USER_NICKNAME = "SELECT * FROM users WHERE nick_name = ?;";
+    private static final String FIND_USERS_BY_ROLE = "SELECT * FROM users WHERE role = ?;";
+    private static final String FIND_USERS_BY_BLOCK = "SELECT * FROM users WHERE block = ? AND role <> 'ADMINISTRATOR';";
     private static final String FIND_ALL_USER = "SELECT * FROM users;";
     private static final String UPDATE_USER = "UPDATE users SET email=?, nick_name=?, password=?, role=?, block=?, first_name=?, " +
             "last_name=?, contact=? WHERE id=?;";
@@ -26,6 +28,24 @@ public class UserDaoImpl implements UserDao {
 
     public UserDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    @Override
+    public Iterable<User> findByBlock(boolean isBlocked) throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_USERS_BY_BLOCK)) {
+            stat.setBoolean(1, isBlocked);
+
+            return selectUsersQuery(stat);
+        }
+    }
+
+    @Override
+    public Iterable<User> findByRole(User.Role role) throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_USERS_BY_ROLE)) {
+            stat.setString(1, role.name());
+
+            return selectUsersQuery(stat);
+        }
     }
 
     @Override
@@ -170,5 +190,24 @@ public class UserDaoImpl implements UserDao {
             }
         }
         return foundUser;
+    }
+
+    private Iterable<User> selectUsersQuery(PreparedStatement stat) throws SQLException {
+        List<User> list = new LinkedList<>();
+        try (ResultSet rs = stat.executeQuery()) {
+            while (rs.next()) {
+                User foundUser = new User(rs.getString("email"),
+                        rs.getString("nick_name"),
+                        rs.getString("password"),
+                        User.Role.valueOf(rs.getString("role")),
+                        rs.getBoolean("block"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("contact"));
+                foundUser.setId(rs.getInt("id"));
+                list.add(foundUser);
+            }
+        }
+        return list;
     }
 }

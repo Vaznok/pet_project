@@ -12,8 +12,6 @@ import java.io.IOException;
 
 @WebFilter(servletNames = "AccountServlet")
 public class AccountFilter extends BaseFilter {
-    private static final String REDIRECT = "welcome.jsp";
-
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = request.getSession(false);

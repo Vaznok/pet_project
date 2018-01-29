@@ -2,53 +2,34 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 
 <html>
-<head>
-    <title>Orders</title>
-    <h3>Orders:</h3>
-    <style>
-        <%@include file="/WEB-INF/librarian.css"%>
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        /*$(document).ready(function() {
-            $('#accept').click(  function () {
-                var sendOrderId = $('#accept').val();
-                $.ajax({
-                    url: 'http://localhost:8080/library/librarian',
-                    type: 'POST',
-                    data: {
-                        orderId: sendOrderId
-                    },
-                    success: function () {
-                        location.reload();
-                    },
-                    error: function () {
-                        /!*window.location.replace("http://localhost:8080/library/error.jsp");*!/
-                    }
+    <head>
+        <title>Orders</title>
+        <h3>Orders:</h3>
+        <style>
+            <%@include file="/WEB-INF/librarian.css"%>
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.cancel').click(  function () {
+                    var sendOrderId = $('.cancel').val();
+                    $.ajax({
+                        url: 'http://localhost:8080/library/librarian',
+                        type: 'DELETE',
+                        data: {
+                            orderId: sendOrderId
+                        },
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                            /*window.location.replace("http://localhost:8080/library/error.jsp");*/
+                        }
+                    });
                 });
             });
-        });*/
-        $(document).ready(function() {
-            $('#cancel').click(  function () {
-                var sendOrderId = $('#cancel').val();
-                $.ajax({
-                    url: 'http://localhost:8080/library/librarian',
-                    type: 'DELETE',
-                    data: {
-                        orderId: sendOrderId
-                    },
-                    success: function () {
-                        location.reload();
-                    },
-                    error: function () {
-                        /*window.location.replace("http://localhost:8080/library/error.jsp");*/
-                    }
-                });
-            });
-        });
-    </script>
-
-</head>
+        </script>
+    </head>
     <body>
         <table>
             <tr>
@@ -69,12 +50,11 @@
                     <td>${view.orderBookCount}</td>
                     <td>
                         <form method="get" action="http://localhost:8080/library/librarian/order" >
-                            <input type="hidden" name="id" value="${view.orderId}"/>
-                            <button type="submit" value="${view.orderId}">Accept</button>
+                            <button type="submit" name="id" value="${view.orderId}">Accept</button>
                         </form>
                     </td>
                     <td>
-                        <button id="cancel" type="submit" value="${view.orderId}">Cancel</button>
+                        <button class="cancel" type="submit" value="${view.orderId}">Cancel</button>
                     </td>
                 </tr>
             </c:forEach>

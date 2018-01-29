@@ -1,8 +1,7 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.DataSourceForTest;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.BookDaoImpl;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandlerImpl;
+import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandler;
 import com.epam.rd.november2017.vlasenko.entity.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,11 +10,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.TRANSACTION_TEST;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BookDaoImplTest {
-    private TransactionHandlerImpl transaction = new TransactionHandlerImpl(new DataSourceForTest());
+    private TransactionHandler transaction = TRANSACTION_TEST;
     private BookDaoImpl sut = new BookDaoImpl(transaction);
 
     @BeforeEach

@@ -24,10 +24,10 @@ public class LibrarianFilter extends BaseFilter {
             if((userRole.equals(LIBRARIAN.name()) || userRole.equals(ADMINISTRATOR.name())) && !user.isBlocked()) {
                 chain.doFilter(request, response);
             } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                response.sendError(404);
             }
         } catch (NullPointerException e) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            response.sendError(404);
         }
     }
 }

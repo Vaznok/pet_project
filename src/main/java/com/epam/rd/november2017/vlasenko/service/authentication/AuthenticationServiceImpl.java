@@ -1,9 +1,8 @@
 package com.epam.rd.november2017.vlasenko.service.authentication;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.DataSourceForTest;
+import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.UserDao;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.UserDaoImpl;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandler;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandlerImpl;
 import com.epam.rd.november2017.vlasenko.entity.User;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -11,11 +10,13 @@ import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.TRANSACTION;
+
 public class AuthenticationServiceImpl implements AuthenticationService<User> {
     private static final Pattern passwordPattern = Pattern.compile("^{6,18}$");
 
-    private TransactionHandler transaction = new TransactionHandlerImpl(new DataSourceForTest());
-    private UserDaoImpl userDao = new UserDaoImpl(transaction);
+    private TransactionHandler transaction = TRANSACTION;
+    private UserDao userDao = new UserDaoImpl(transaction);
 
     private boolean validatePassword(String password){
         Matcher matcher = passwordPattern.matcher(password);

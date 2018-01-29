@@ -19,7 +19,6 @@ import static java.util.Objects.nonNull;
 @WebFilter("/*")
 public class LoginFilter extends BaseFilter{
     private final static String SESSION_ATTRIBUTE_USER = "user";
-    private static final String PAGE_ERROR = "error.jsp";
 
     private AuthenticationServiceImpl authentication = new AuthenticationServiceImpl();
     private EncryptionServiceImpl encryption = new EncryptionServiceImpl();
@@ -68,7 +67,6 @@ public class LoginFilter extends BaseFilter{
 
                 } catch (SQLException e) {
                     response.setStatus(500);
-                    response.sendRedirect(PAGE_ERROR);
                 }
             }
         }

@@ -3,17 +3,17 @@ package com.epam.rd.november2017.vlasenko.service.order;
 import java.sql.SQLException;
 
 public interface OrderService<T, ID> {
-    boolean createOrder(ID userId, ID bookId);
+    void createOrder(ID userId, ID bookId, ID bookCount) throws SQLException;
 
-    Iterable<T> showClientOrders(ID user);
+    Iterable<T> findClientNewOrders(ID userId) throws SQLException;
 
-    Iterable<T> showNewOrders() throws SQLException;
+    Iterable<T> findClientActiveOrders(ID userId) throws SQLException;
 
-    Iterable<T> showExpiredOrders();
+    Iterable<T> findNewOrders() throws SQLException;
 
     boolean cancelOrder(ID orderID) throws SQLException;
 
-    boolean acceptOrder(Integer orderId, String plannedReturn, Integer penalty) throws SQLException;
+    boolean acceptOrder(ID orderId, String plannedReturn, Integer penalty) throws SQLException;
     
     String validateOrderConfirmation(String plannedDate, String penalty);
 }

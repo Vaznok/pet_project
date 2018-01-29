@@ -80,4 +80,8 @@ public class Book {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

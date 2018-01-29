@@ -1,8 +1,8 @@
-package com.epam.rd.november2017.vlasenko.service.order.view;
+package com.epam.rd.november2017.vlasenko.entity.view;
 
 import com.epam.rd.november2017.vlasenko.entity.Order;
 
-public class View {
+public class UnitedView {
     private Integer userId;
     private Integer orderId;
     private Integer bookId;

@@ -1,8 +1,8 @@
-package com.epam.rd.november2017.vlasenko.service.order.view;
+package com.epam.rd.november2017.vlasenko.entity.view;
 
 import com.epam.rd.november2017.vlasenko.entity.Order;
 
-public class ViewBuilder {
+public class UnitedViewBuilder {
     private Integer userId;
     private Integer orderId;
     private Integer bookId;
@@ -23,102 +23,102 @@ public class ViewBuilder {
     private String lastName;
     private String contact;
 
-    public ViewBuilder buildUserId(Integer userId) {
+    public UnitedViewBuilder buildUserId(Integer userId) {
         this.userId = userId;
         return this;
     }
 
-    public ViewBuilder buildOrderId(Integer orderId) {
+    public UnitedViewBuilder buildOrderId(Integer orderId) {
         this.orderId = orderId;
         return this;
     }
 
-    public ViewBuilder buildBookId(Integer bookId) {
+    public UnitedViewBuilder buildBookId(Integer bookId) {
         this.bookId = bookId;
         return this;
     }
 
-    public ViewBuilder buildBookName(String bookName) {
+    public UnitedViewBuilder buildBookName(String bookName) {
         this.bookName = bookName;
         return this;
     }
 
-    public ViewBuilder buildAuthor(String author) {
+    public UnitedViewBuilder buildAuthor(String author) {
         this.author = author;
         return this;
     }
 
-    public ViewBuilder buildPublisher(String publisher) {
+    public UnitedViewBuilder buildPublisher(String publisher) {
         this.publisher = publisher;
         return this;
     }
 
-    public ViewBuilder buildPublicationDate(String publicationDate) {
+    public UnitedViewBuilder buildPublicationDate(String publicationDate) {
         this.publicationDate = publicationDate;
         return this;
     }
 
-    public ViewBuilder buildTotalBookCount(int totalBookCount) {
+    public UnitedViewBuilder buildTotalBookCount(int totalBookCount) {
         this.totalBookCount = totalBookCount;
         return this;
     }
 
-    public ViewBuilder buildOrderBookCount(int orderBookCount) {
+    public UnitedViewBuilder buildOrderBookCount(int orderBookCount) {
         this.orderBookCount = orderBookCount;
         return this;
     }
 
-    public ViewBuilder buildReceived(String received) {
+    public UnitedViewBuilder buildReceived(String received) {
         this.received = received;
         return this;
     }
 
-    public ViewBuilder buildPlanedReturn(String planedReturn) {
+    public UnitedViewBuilder buildPlanedReturn(String planedReturn) {
         this.planedReturn = planedReturn;
         return this;
     }
 
-    public ViewBuilder buildReturned(String returned) {
+    public UnitedViewBuilder buildReturned(String returned) {
         this.returned = returned;
         return this;
     }
 
-    public ViewBuilder buildPenalty(Integer penalty) {
+    public UnitedViewBuilder buildPenalty(Integer penalty) {
         this.penalty = penalty;
         return this;
     }
 
-    public ViewBuilder buildStatus(Order.Status status) {
+    public UnitedViewBuilder buildStatus(Order.Status status) {
         this.status = status;
         return this;
     }
 
-    public ViewBuilder buildEmail(String email) {
+    public UnitedViewBuilder buildEmail(String email) {
         this.email = email;
         return this;
     }
 
-    public ViewBuilder buildNickName(String nickName) {
+    public UnitedViewBuilder buildNickName(String nickName) {
         this.nickName = nickName;
         return this;
     }
 
-    public ViewBuilder buildFirstName(String firstName) {
+    public UnitedViewBuilder buildFirstName(String firstName) {
         this.firstName = firstName;
         return this;
     }
 
-    public ViewBuilder buildLastName(String lastName) {
+    public UnitedViewBuilder buildLastName(String lastName) {
         this.lastName = lastName;
         return this;
     }
 
-    public ViewBuilder buildContact(String contact) {
+    public UnitedViewBuilder buildContact(String contact) {
         this.contact = contact;
         return this;
     }
-    public View build() {
-        View view = new View();
+    public UnitedView build() {
+        UnitedView view = new UnitedView();
         view.setOrderId(orderId);
         view.setBookId(bookId);
         view.setUserId(userId);

@@ -13,14 +13,4 @@
         <error-code>500</error-code>
         <location>/error.jsp</location>
     </error-page>
-
-    <!--<servlet>
-        <servlet-name>OrderAccept</servlet-name>
-        <jsp-file>order-accept.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>OrderAccept</servlet-name>
-        <url-pattern>/librarian/order/</url-pattern>
-    </servlet-mapping>-->
-
 </web-app>

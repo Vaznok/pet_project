@@ -1,8 +1,7 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository;
 
-import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.DataSourceForTest;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.OrderDaoImpl;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandlerImpl;
+import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandler;
 import com.epam.rd.november2017.vlasenko.entity.Order;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +11,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.TRANSACTION_TEST;
 import static com.epam.rd.november2017.vlasenko.entity.Order.Status.NEW;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderDaoImplTest {
-    private TransactionHandlerImpl transaction = new TransactionHandlerImpl(new DataSourceForTest());
+    private TransactionHandler transaction = TRANSACTION_TEST;
     private OrderDaoImpl sut = new OrderDaoImpl(transaction);
 
     @BeforeEach

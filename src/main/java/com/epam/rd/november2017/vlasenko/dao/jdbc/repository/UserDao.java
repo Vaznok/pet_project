@@ -11,4 +11,8 @@ public interface UserDao extends CrudDao<User, Integer>{
     User findUserByEmail(String email) throws SQLException;
 
     User findUserByNickName (String nickName)  throws SQLException;
+
+    Iterable<User> findByRole (User.Role role)  throws SQLException;
+
+    Iterable<User> findByBlock (boolean isBlocked)  throws SQLException;
 }

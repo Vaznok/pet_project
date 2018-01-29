@@ -63,10 +63,10 @@
     <changeSet id="create_users_books" author="vlasenko_vitaliy">
         <createTable tableName="users_books">
             <column name="user_id" type="int">
-                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)" deleteCascade="true"/>
             </column>
             <column name="book_id" type="int">
-                <constraints nullable="false" foreignKeyName="fk_book_id" references="books(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_book_id" references="books(id)" deleteCascade="true"/>
             </column>
             <column name="received" type="date">
                 <constraints nullable="true" />

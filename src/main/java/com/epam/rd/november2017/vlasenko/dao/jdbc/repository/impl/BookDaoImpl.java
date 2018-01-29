@@ -15,6 +15,8 @@ public class BookDaoImpl implements BookDao {
     private static final String FIND_BOOK_NAME = "SELECT * FROM books WHERE name LIKE ?;";
     private static final String FIND_BOOK_AUTHOR = "SELECT * FROM books WHERE author LIKE ?;";
     private static final String FIND_ALL_BOOK = "SELECT * FROM books;";
+    private static final String FIND_ALL_EXISTED = "SELECT * FROM books WHERE count > 0;";
+    private static final String CHECK_IF_EXIST = "SELECT * FROM books WHERE name = ? AND author = ? AND publisher=? AND publication_date=?;";
     private static final String UPDATE_BOOK = "UPDATE books SET name=?, author=?, publisher=?, publication_date=?, count=? WHERE id=?;";
     private static final String REMOVE_BOOK = "DELETE FROM books WHERE id=?;";
 
@@ -22,6 +24,22 @@ public class BookDaoImpl implements BookDao {
 
     public BookDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    @Override
+    public boolean isBookExist(Book book) throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(CHECK_IF_EXIST)) {
+            stat.setString(1, book.getName());
+            stat.setString(2, book.getAuthor());
+            stat.setString(3, book.getPublisher());
+            stat.setString(4, book.getPublicationDate());
+
+            List<Book> selectResult = (List<Book>) selectUserQuery(stat);
+            if (selectResult.size() == 0) {
+                return false;
+            }
+            return true;
+        }
     }
 
     @Override
@@ -90,6 +108,13 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Iterable<Book> findAll() throws SQLException {
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_ALL_BOOK)) {
+            return selectUserQuery(stat);
+        }
+    }
+
+    @Override
+    public Iterable<Book> findAllExisted() throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_ALL_EXISTED)) {
             return selectUserQuery(stat);
         }
     }

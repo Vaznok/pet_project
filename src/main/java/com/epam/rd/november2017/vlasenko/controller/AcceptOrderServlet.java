@@ -50,16 +50,11 @@ public class AcceptOrderServlet extends HttpServlet {
             Integer orderId = Integer.valueOf(id);
             Integer penalty = Integer.valueOf(penaltyStr);
             orderService.acceptOrder(orderId, plannedReturn, penalty);
-            resp.setStatus(HttpServletResponse.SC_FOUND);
+            resp.setStatus(302);
             resp.setHeader("Location", "http://localhost:8080/library/librarian");
         } catch (SQLException e) {
             logger.error("Order confirmation error.", e);
             resp.sendError(500);
         }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
     }
 }

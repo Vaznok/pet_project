@@ -1,8 +1,8 @@
 package com.epam.rd.november2017.vlasenko.controller;
 
-import com.epam.rd.november2017.vlasenko.exception.view.JspException;
+import javax.servlet.jsp.JspException;
 import com.epam.rd.november2017.vlasenko.service.order.OrderServiceImpl;
-import com.epam.rd.november2017.vlasenko.service.order.view.View;
+import com.epam.rd.november2017.vlasenko.entity.view.UnitedView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class LibrarianServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             resp.setContentType("text/html");
-            List<View> viewList = (List<View>) orderService.showNewOrders();
+            List<UnitedView> viewList = (List<UnitedView>) orderService.findNewOrders();
             HttpSession session = req.getSession();
             session.setAttribute(SESSION_ATTR_VIEWS, viewList);
             RequestDispatcher dispatcher = req.getRequestDispatcher(LIBRARIAN_JSP);
@@ -42,19 +42,6 @@ public class LibrarianServlet extends HttpServlet {
             logger.error("Orders list doesn't work!", e.getMessage());
             resp.sendError(500);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-      /*  RequestDispatcher dispatcher = req.getRequestDispatcher(ORDER_JSP);
-        dispatcher.forward(req, resp);
-        req.getParameter("plannedReturn");
-        req.getParameter("penalty");*/
     }
 
     @Override
@@ -72,11 +59,12 @@ public class LibrarianServlet extends HttpServlet {
             orderService.cancelOrder(Integer.valueOf(orderIdStr));
             PrintWriter writer = resp.getWriter();
             writer.print("refresh page");
+            writer.close();
         } catch (SQLException e) {
-            logger.error("Orders list doesn't work!", e);
+            logger.warn("Database problem!", e);
             resp.sendError(500);
         } catch (NumberFormatException | JspException e) {
-            logger.error("Incorrect parsing /librarian 'PUT'.", e);
+            logger.warn("Incorrect parsing!", e);
             resp.sendError(500);
         }
     }

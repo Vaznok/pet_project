@@ -96,4 +96,8 @@ public class User implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
 }

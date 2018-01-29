@@ -2,8 +2,8 @@ package com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.OrderDao;
 import com.epam.rd.november2017.vlasenko.entity.Order;
-import com.epam.rd.november2017.vlasenko.service.order.view.View;
-import com.epam.rd.november2017.vlasenko.service.order.view.ViewBuilder;
+import com.epam.rd.november2017.vlasenko.entity.view.UnitedView;
+import com.epam.rd.november2017.vlasenko.entity.view.UnitedViewBuilder;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -18,42 +18,17 @@ public class OrderDaoImpl implements OrderDao {
     private static final String FIND_ORDER_ALL = "SELECT * FROM orders";
     private static final String UPDATE_ORDER = "UPDATE orders SET user_id=?, book_id=?, received=?, planned_return=?, returned=?, penalty=?, status=?, count=? WHERE order_id=?;";
     private static final String REMOVE_ORDER = "DELETE FROM orders WHERE order_id=?;";
-    private static final String SHOW_BORROWED_BOOKS = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id " +
-            "WHERE orders.status='NEW' AND orders.user_id=2;";
-    private static final String JOIN_FIND_BY_ORDER_STATUS = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id INNER JOIN users ON orders.user_id=users.id WHERE orders.status=?";
-
+    private static final String FIND_ORDERS_BY_STATUS_JOIN = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id INNER JOIN users ON orders.user_id=users.id WHERE orders.status=?";
+    private static final String FIND_CLIENT_ORDERS_BY_STATUS_JOIN = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id INNER JOIN users ON orders.user_id=users.id WHERE user_id=? AND orders.status=?";
     private DataSource dataSource;
 
     public OrderDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-
-    /*@Override
-    public Iterable<User> findBorrowedBooks(Integer userId) throws SQLException {
-        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(CREATE_USER_ORDER)) {
-            stat.setInt(1, userId);
-            stat.setString(2, RECEIVED.name());
-
-            stat.executeQuery();
-        }
-        return null;
-    }*/
-
-    /*@Override
-    public void orderBook(Integer userId, Integer bookId) throws SQLException {
-        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(CREATE_USER_ORDER)) {
-            stat.setInt(1, userId);
-            stat.setInt(2, bookId);
-            stat.setString(3, NEW.name());
-
-            stat.executeQuery();
-        }
-    }*/
-
     @Override
-    public Iterable<View> showOrdersByStatus(Order.Status status) throws SQLException {
-        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(JOIN_FIND_BY_ORDER_STATUS)) {
+    public Iterable<UnitedView> showOrdersByStatus(Order.Status status) throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_ORDERS_BY_STATUS_JOIN)) {
             stat.setString(1, status.name());
 
             return selectViewQuery(stat);
@@ -61,13 +36,13 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Iterable<View> showExpiredOrders() {
-        return null;
-    }
+    public Iterable<UnitedView> findClientOrdersByStatus(Integer clientId, Order.Status status) throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_CLIENT_ORDERS_BY_STATUS_JOIN)) {
+            stat.setInt(1, clientId);
+            stat.setString(2, status.name());
 
-    @Override
-    public Iterable<View> showClientOrders(Integer clientId) {
-        return null;
+            return selectViewQuery(stat);
+        }
     }
 
     @Override
@@ -183,11 +158,11 @@ public class OrderDaoImpl implements OrderDao {
         }
     }
 
-    private Iterable<View> selectViewQuery(PreparedStatement stat) throws SQLException {
+    private Iterable<UnitedView> selectViewQuery(PreparedStatement stat) throws SQLException {
         try (ResultSet rs = stat.executeQuery()) {
-            List<View> list = new LinkedList<>();
+            List<UnitedView> list = new LinkedList<>();
             while (rs.next()) {
-                View view = new ViewBuilder()
+                UnitedView view = new UnitedViewBuilder()
                         //Order data
                         .buildOrderId(rs.getInt("order_id"))
                         .buildReceived(rs.getString("received"))
