@@ -7,8 +7,6 @@ public interface BookService<T, ID> {
 
     T find(ID id) throws SQLException;
 
-    boolean changeBookCount(ID bookId, ID bookCount) throws SQLException;
-
     boolean deleteBook(ID bookId) throws SQLException;
 
     Iterable<T> findAll() throws SQLException;

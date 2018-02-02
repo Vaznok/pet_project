@@ -38,7 +38,6 @@
             <c:when test="${sessionScope.user.role == 'ADMINISTRATOR'}">
                 <form method="post" action="http://localhost:8080/library/book">
                     <input name="bookCount" type="number" min="1" size="4"/><input type="submit" value="Make order"/>
-                    <input name="userId" type="hidden" value="${sessionScope.user.id}">
                     <input name="bookId" type="hidden" value="${book.id}">
                 </form>
                 <input type="submit" value="Update">
@@ -47,7 +46,6 @@
             <c:when test="${sessionScope.user.role != null}">
                 <form method="post" action="http://localhost:8080/library/book">
                     <input name="bookCount" type="number" min="1" size="4"/><input type="submit" value="Make order"/>
-                    <input name="userId" type="hidden" value="${sessionScope.user.id}">
                     <input name="bookId" type="hidden" value="${book.id}">
                 </form>
             </c:when>

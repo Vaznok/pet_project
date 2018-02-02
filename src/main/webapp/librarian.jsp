@@ -4,7 +4,6 @@
 <html>
     <head>
         <title>Orders</title>
-        <h3>Orders:</h3>
         <style>
             <%@include file="/WEB-INF/librarian.css"%>
         </style>
@@ -29,8 +28,29 @@
                 });
             });
         </script>
+        <script>
+            $(document).ready(function() {
+                $('.return').click(  function () {
+                    var sendOrderId = $('.return').val();
+                    $.ajax({
+                        url: 'http://localhost:8080/library/librarian',
+                        type: 'PUT',
+                        data: {
+                            orderId: sendOrderId
+                        },
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                            /*window.location.replace("http://localhost:8080/library/error.jsp");*/
+                        }
+                    });
+                });
+            });
+        </script>
     </head>
     <body>
+        <h3>New orders:</h3>
         <table>
             <tr>
                 <th>User nickname</th>
@@ -41,20 +61,74 @@
                 <th></th>
                 <th></th>
             </tr>
-            <c:forEach var="view" items="${views}">
+            <c:forEach var="order" items="${newOrders}">
                 <tr>
-                    <td><a href="./book?id=${view.userId}">${view.nickName}</a></td>
-                    <td>${view.author}</td>
-                    <td>${view.publisher}</td>
-                    <td>${view.publicationDate}</td>
-                    <td>${view.orderBookCount}</td>
+                    <td><a href="./librarian/user?id=${order.userId}">${order.nickName}</a></td>
+                    <td>${order.author}</td>
+                    <td>${order.publisher}</td>
+                    <td>${order.publicationDate}</td>
+                    <td>${order.orderBookCount}</td>
                     <td>
                         <form method="get" action="http://localhost:8080/library/librarian/order" >
-                            <button type="submit" name="id" value="${view.orderId}">Accept</button>
+                            <button type="submit" name="id" value="${order.orderId}">Accept</button>
                         </form>
                     </td>
                     <td>
-                        <button class="cancel" type="submit" value="${view.orderId}">Cancel</button>
+                        <button class="cancel" type="submit" value="${order.orderId}">Cancel</button>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+        <h3>Active orders:</h3>
+        <table>
+            <tr>
+                <th>User nickname</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Publication date</th>
+                <th>Count</th>
+                <th>Deadline</th>
+                <th>Penalty</th>
+                <th></th>
+            </tr>
+            <c:forEach var="order" items="${activeOrders}">
+                <tr>
+                    <td><a href="./librarian/user?id=${order.userId}">${order.nickName}</a></td>
+                    <td>${order.author}</td>
+                    <td>${order.publisher}</td>
+                    <td>${order.publicationDate}</td>
+                    <td>${order.orderBookCount}</td>
+                    <td>${order.plannedReturn}</td>
+                    <td>${order.penalty}</td>
+                    <td>
+                        <button class="return" type="submit" value="${order.orderId}">Return</button>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+        <h3>Expired orders:</h3>
+        <table>
+            <tr>
+                <th>User nickname</th>
+                <th>Author</th>
+                <th>Publisher</th>
+                <th>Publication date</th>
+                <th>Count</th>
+                <th>Deadline</th>
+                <th>Penalty</th>
+                <th></th>
+            </tr>
+            <c:forEach var="order" items="${expiredOrders}">
+                <tr>
+                    <td><a href="./librarian/user?id=${order.userId}">${order.nickName}</a></td>
+                    <td>${order.author}</td>
+                    <td>${order.publisher}</td>
+                    <td>${order.publicationDate}</td>
+                    <td>${order.orderBookCount}</td>
+                    <td>${order.plannedReturn}</td>
+                    <td>${order.penalty}</td>
+                    <td>
+                        <button class="return" type="submit" value="${order.orderId}">Return</button>
                     </td>
                 </tr>
             </c:forEach>

@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.SESSION_USER_ATTRIBUTE_NAME;
 import static java.util.Objects.nonNull;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-    private static final String SESSION_ATTRIBUTE_USER = "user";
     private static final String REQ_ATTR_NO_LOGIN = "noLogin";
     private static final String PAGE_NO_LOGIN = "login.jsp";
 
@@ -56,7 +56,7 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             response.addCookie(new Cookie("email", encryption.encrypt(email)));
             response.addCookie(new Cookie("password", encryption.encrypt(password)));
-            request.getSession().setAttribute(SESSION_ATTRIBUTE_USER, user);
+            request.getSession().setAttribute(SESSION_USER_ATTRIBUTE_NAME, user);
             response.sendRedirect(request.getContextPath());
         } else {
             request.setAttribute(REQ_ATTR_NO_LOGIN, "No account for this email and password!");

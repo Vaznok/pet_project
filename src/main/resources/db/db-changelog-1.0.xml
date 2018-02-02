@@ -8,8 +8,7 @@
         <createTable tableName="books">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"
-                             nullable="false"
-                             deleteCascade="true" />
+                             nullable="false" />
             </column>
             <column name="name" type="varchar(50)">
                 <constraints nullable="false" />
@@ -36,8 +35,7 @@
         <createTable tableName="users">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"
-                             nullable="false"
-                             deleteCascade="true "/>
+                             nullable="false" />
             </column>
             <column name="email" type="varchar(50)">
                 <constraints nullable="false" unique="true" />

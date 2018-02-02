@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="/WEB-INF/tag/welcome.tld" prefix="custom" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Welcome</title>
@@ -12,5 +13,14 @@
         <p><a href="./check-in">Check in</a></p>
         <p><a href="./account">My account</a></p>
         <p><a href="./catalog">Book catalog</a></p>
+        <c:choose>
+            <c:when test="${sessionScope.user.role == 'ADMINISTRATOR'}">
+                <p><a href="./admin">Admin panel</a></p>
+                <p><a href="./librarian">Librarian panel</a></p>
+            </c:when>
+            <c:when test="${sessionScope.user.role == 'LIBRARIAN'}">
+                <p><a href="./librarian">Librarian panel</a></p>
+            </c:when>
+        </c:choose>
     </body>
 </html>

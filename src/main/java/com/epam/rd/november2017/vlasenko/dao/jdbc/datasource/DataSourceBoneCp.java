@@ -13,9 +13,10 @@ import java.util.Properties;
 
 public class DataSourceBoneCp extends SimpleDataSource {
     private static Logger logger = LoggerFactory.getLogger(DataSourceBoneCp.class.getSimpleName());
+    private static BoneCP connectionPool;
+    private static DataSourceBoneCp dataSource;
 
-    @Override
-    public Connection getConnection() throws SQLException {
+    static {
         logger.debug("Attempt to get JDBC connection!");
         Properties props = new Properties();
         try (InputStream in = DataSourceBoneCp.class.getClassLoader().getResourceAsStream("db/liquibase.properties")) {
@@ -41,11 +42,23 @@ public class DataSourceBoneCp extends SimpleDataSource {
         config.setMinConnectionsPerPartition(5);
         config.setMaxConnectionsPerPartition(10);
         config.setPartitionCount(1);
+        try {
+            connectionPool = new BoneCP(config);
+        } catch (SQLException e) {
+            logger.warn("Fault to create BoneCp connection pool!");
+        }
+        dataSource = new DataSourceBoneCp();
+    }
 
-        BoneCP connectionPool = new BoneCP(config);
+    @Override
+    public Connection getConnection() throws SQLException {
         Connection conn = connectionPool.getConnection();
         conn.setAutoCommit(false);
         logger.debug("Jdbc connection is gotten!");
         return conn;
+    }
+
+    public static DataSourceBoneCp getDataSource() {
+        return dataSource;
     }
 }

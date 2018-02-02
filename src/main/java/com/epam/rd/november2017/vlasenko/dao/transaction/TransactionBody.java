@@ -1,4 +1,4 @@
-package com.epam.rd.november2017.vlasenko.dao.jdbc.transaction;
+package com.epam.rd.november2017.vlasenko.dao.transaction;
 
 import java.sql.SQLException;
 

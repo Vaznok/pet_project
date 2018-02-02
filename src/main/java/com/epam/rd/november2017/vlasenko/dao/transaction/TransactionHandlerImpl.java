@@ -1,4 +1,4 @@
-package com.epam.rd.november2017.vlasenko.dao.jdbc.transaction;
+package com.epam.rd.november2017.vlasenko.dao.transaction;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.datasource.SimpleDataSource;
 import org.slf4j.Logger;

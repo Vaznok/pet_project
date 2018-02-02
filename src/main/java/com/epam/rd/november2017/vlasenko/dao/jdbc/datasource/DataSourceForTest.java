@@ -13,9 +13,12 @@ import java.util.Properties;
 
 public class DataSourceForTest extends SimpleDataSource {
     private static Logger logger = LoggerFactory.getLogger(DataSourceForTest.class.getSimpleName());
+    private static BoneCP connectionPool;
+    private static DataSourceForTest dataSource;
 
-    @Override
-    public Connection getConnection() throws SQLException {
+    private DataSourceForTest() {}
+
+    static {
         logger.debug("Attempt to get JDBC connection!");
         Properties props = new Properties();
         try (InputStream in = DataSourceBoneCp.class.getClassLoader().getResourceAsStream("db/test.properties")) {
@@ -23,17 +26,14 @@ public class DataSourceForTest extends SimpleDataSource {
         } catch (IOException e) {
             logger.warn("Unsuccessful attempt to read properties from liquibase.properties file!");
         }
-
         String url = props.getProperty("url");
         String username = props.getProperty("username");
         String password = props.getProperty("password");
-
         try {
             Class.forName("org.mariadb.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             logger.warn("Driver class wasn't found!", e.getMessage());
         }
-
         BoneCPConfig config = new BoneCPConfig();
         config.setJdbcUrl(url);
         config.setUsername(username);
@@ -41,11 +41,23 @@ public class DataSourceForTest extends SimpleDataSource {
         config.setMinConnectionsPerPartition(5);
         config.setMaxConnectionsPerPartition(10);
         config.setPartitionCount(1);
+        try {
+            connectionPool = new BoneCP(config);
+        } catch (SQLException e) {
+            logger.warn("Fault to create BoneCp connection pool!");
+        }
+        dataSource = new DataSourceForTest();
+    }
 
-        BoneCP connectionPool = new BoneCP(config);
+    @Override
+    public Connection getConnection() throws SQLException {
         Connection conn = connectionPool.getConnection();
         conn.setAutoCommit(false);
         logger.debug("Jdbc connection is gotten!");
         return conn;
+    }
+
+    public static DataSourceForTest getDataSource() {
+        return dataSource;
     }
 }

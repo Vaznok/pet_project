@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.SESSION_USER_ATTRIBUTE_NAME;
+
 @WebFilter(servletNames = "AccountServlet")
 public class AccountFilter extends BaseFilter {
     @Override
@@ -17,7 +19,7 @@ public class AccountFilter extends BaseFilter {
         HttpSession session = request.getSession(false);
 
         try {
-            User user = (User) session.getAttribute("user");
+            User user = (User) session.getAttribute(SESSION_USER_ATTRIBUTE_NAME);
             //each user has access to this page. So it is enough just to check if user is blocked.
             if (!user.isBlocked()) {
                 chain.doFilter(request, response);

@@ -2,7 +2,7 @@ package com.epam.rd.november2017.vlasenko.service.registration;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.UserDao;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.UserDaoImpl;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandler;
+import com.epam.rd.november2017.vlasenko.dao.transaction.TransactionHandler;
 import com.epam.rd.november2017.vlasenko.entity.User;
 import org.apache.commons.validator.routines.EmailValidator;
 

@@ -113,24 +113,10 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Iterable<User> findAll() throws SQLException {
-        List<User> list = new LinkedList<>();
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_ALL_USER)) {
-            try (ResultSet rs = stat.executeQuery()) {
-                while (rs.next()) {
-                    User foundUser = new User(rs.getString("email"),
-                                            rs.getString("nick_name"),
-                                            rs.getString("password"),
-                                            User.Role.valueOf(rs.getString("role")),
-                                            rs.getBoolean("block"),
-                                            rs.getString("first_name"),
-                                            rs.getString("last_name"),
-                                            rs.getString("contact"));
-                    foundUser.setId(rs.getInt("id"));
-                    list.add(foundUser);
-                }
-            }
+
+            return selectUsersQuery(stat);
         }
-        return list;
     }
 
     @Override

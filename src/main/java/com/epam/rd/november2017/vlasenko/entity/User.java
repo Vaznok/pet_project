@@ -77,6 +77,10 @@ public class User implements Serializable {
         return role;
     }
 
+    public String getRoleStr() {
+        return role.name();
+    }
+
     public boolean isBlocked() {
         return isBlocked;
     }

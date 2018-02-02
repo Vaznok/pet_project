@@ -16,7 +16,7 @@ public class UnitedViewBuilder {
     private String planedReturn;
     private String returned;
     private Integer penalty;
-    private Order.Status status;
+    private String status;
     private String email;
     private String nickName;
     private String firstName;
@@ -88,7 +88,7 @@ public class UnitedViewBuilder {
         return this;
     }
 
-    public UnitedViewBuilder buildStatus(Order.Status status) {
+    public UnitedViewBuilder buildStatus(String status) {
         this.status = status;
         return this;
     }
@@ -129,7 +129,7 @@ public class UnitedViewBuilder {
         view.setTotalBookCount(totalBookCount);
         view.setOrderBookCount(orderBookCount);
         view.setReceived(received);
-        view.setPlanedReturn(planedReturn);
+        view.setPlannedReturn(planedReturn);
         view.setReturned(returned);
         view.setPenalty(penalty);
         view.setStatus(status);

@@ -1,7 +1,7 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.BookDaoImpl;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandler;
+import com.epam.rd.november2017.vlasenko.dao.transaction.TransactionHandler;
 import com.epam.rd.november2017.vlasenko.entity.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,15 +51,18 @@ public class BookDaoImplTest {
                 add(new Book("Before They Are Hanged",
                             "Joe Abercrombie",
                             "Gollancz",
-                            "2006-05-04"));
+                            "2006-05-04",
+                            5));
                 add(new Book("Influence: The Psychology of Persuasion",
                             "Robert B. Cialdini",
                             "Robert B. Cialdini",
-                            "1990-11-18"));
+                            "1990-11-18",
+                            6));
                 add(new Book("Everything Is Negotiable",
                             "Gavin Kennedy",
                             "Brixol",
-                            "1995-06-21"));
+                            "1995-06-21",
+                            9));
             }
         };
 

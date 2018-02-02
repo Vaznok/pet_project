@@ -15,13 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.SESSION_USER_ATTRIBUTE_NAME;
 import static com.epam.rd.november2017.vlasenko.entity.User.Role.REGISTERED_USER;
 import static java.util.Objects.nonNull;
 
 @WebServlet("/check-in")
 public class CheckInServlet extends HttpServlet {
     private final static String CHECK_IN_JSP = "check-in.jsp";
-    private static final String SESSION_ATTRIBUTE_USER = "user";
     private static final String REQ_ATTR_NO_REG = "noRegister";
 
     private RegistrationServiceImpl registration = new RegistrationServiceImpl();
@@ -65,7 +65,7 @@ public class CheckInServlet extends HttpServlet {
 
         response.addCookie(new Cookie("email", encryption.encrypt(email)));
         response.addCookie(new Cookie("password", encryption.encrypt(password)));
-        request.getSession().setAttribute(SESSION_ATTRIBUTE_USER, user);
+        request.getSession().setAttribute(SESSION_USER_ATTRIBUTE_NAME, user);
         response.sendRedirect(request.getContextPath());
     }
 }

@@ -1,7 +1,5 @@
 package com.epam.rd.november2017.vlasenko.entity.view;
 
-import com.epam.rd.november2017.vlasenko.entity.Order;
-
 public class UnitedView {
     private Integer userId;
     private Integer orderId;
@@ -13,10 +11,10 @@ public class UnitedView {
     private int totalBookCount;
     private int orderBookCount;
     private String received;
-    private String planedReturn;
+    private String plannedReturn;
     private String returned;
     private Integer penalty;
-    private Order.Status status;
+    private String status;
     private String email;
     private String nickName;
     private String firstName;
@@ -103,12 +101,12 @@ public class UnitedView {
         this.received = received;
     }
 
-    public String getPlanedReturn() {
-        return planedReturn;
+    public String getPlannedReturn() {
+        return plannedReturn;
     }
 
-    public void setPlanedReturn(String planedReturn) {
-        this.planedReturn = planedReturn;
+    public void setPlannedReturn(String plannedReturn) {
+        this.plannedReturn = plannedReturn;
     }
 
     public String getReturned() {
@@ -125,14 +123,6 @@ public class UnitedView {
 
     public void setPenalty(Integer penalty) {
         this.penalty = penalty;
-    }
-
-    public Order.Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Order.Status status) {
-        this.status = status;
     }
 
     public String getEmail() {
@@ -173,6 +163,14 @@ public class UnitedView {
 
     public void setContact(String contact) {
         this.contact = contact;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

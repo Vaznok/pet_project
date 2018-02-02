@@ -3,8 +3,7 @@
 
 <html>
     <head>
-        <title>Block user</title>
-        <h3>Users:</h3>
+        <title>Account</title>
         <%--<style>
             <%@include file="/WEB-INF/librarian.css"%>
         </style>--%>
@@ -23,7 +22,7 @@
                             location.reload();
                         },
                         error: function () {
-                            /*window.location.replace("http://localhost:8080/library/error.jsp");*/
+
                         }
                     });
                 });
@@ -31,6 +30,10 @@
         </script>
     </head>
     <body>
+        <div>${sessionScope.user.nickName}</div>
+        <div>${sessionScope.user.email}</div>
+        <div>${sessionScope.user.firstName}</div>
+        <div>${sessionScope.user.lastName}</div>
         <table>
             <h2>New orders:</h2>
             <tr>
@@ -76,7 +79,14 @@
                     <td>${order.orderBookCount}</td>
                     <td>${order.received}</td>
                     <td>${order.plannedReturn}</td>
-                    <td>${order.penalty}</td>
+                    <c:choose>
+                        <c:when test="${order.penalty != 0}">
+                            <td style="color: red">${order.penalty}</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td></td>
+                        </c:otherwise>
+                    </c:choose>
                 </tr>
             </c:forEach>
         </table>

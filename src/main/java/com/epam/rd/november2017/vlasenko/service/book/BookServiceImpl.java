@@ -2,7 +2,7 @@ package com.epam.rd.november2017.vlasenko.service.book;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.BookDao;
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.BookDaoImpl;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandler;
+import com.epam.rd.november2017.vlasenko.dao.transaction.TransactionHandler;
 import com.epam.rd.november2017.vlasenko.entity.Book;
 
 import java.sql.SQLException;
@@ -85,7 +85,7 @@ public class BookServiceImpl implements BookService<Book, Integer> {
     }
 
     @Override
-    public void createBook(Book book) throws SQLException {
+    public synchronized void createBook(Book book) throws SQLException {
        transaction.doInTransaction(() -> {
             bookDao.create(book);
             return null;
@@ -111,21 +111,5 @@ public class BookServiceImpl implements BookService<Book, Integer> {
     @Override
     public Book find(Integer id) throws SQLException {
         return transaction.doInTransaction(() -> bookDao.find(id));
-    }
-
-    @Override
-    public synchronized boolean changeBookCount(Integer bookId, Integer bookCount) throws SQLException {
-        Boolean success = transaction.doInTransaction(() -> {
-            Book book = bookDao.find(bookId);
-            Integer realCountOfBooks = book.getCount();
-            if (realCountOfBooks >= bookCount) {
-                realCountOfBooks = realCountOfBooks - bookCount;
-                book.setCount(realCountOfBooks);
-                bookDao.update(bookId, book);
-                return true;
-            }
-            return false;
-        });
-        return success;
     }
 }

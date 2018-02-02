@@ -1,7 +1,7 @@
 package com.epam.rd.november2017.vlasenko.dao.jdbc.repository;
 
 import com.epam.rd.november2017.vlasenko.dao.jdbc.repository.impl.UserDaoImpl;
-import com.epam.rd.november2017.vlasenko.dao.jdbc.transaction.TransactionHandler;
+import com.epam.rd.november2017.vlasenko.dao.transaction.TransactionHandler;
 import com.epam.rd.november2017.vlasenko.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

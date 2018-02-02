@@ -12,9 +12,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.SESSION_USER_ATTRIBUTE_NAME;
 
 @WebServlet(name = "AccountServlet", urlPatterns = "/account")
 public class AccountServlet extends HttpServlet {
@@ -24,11 +30,11 @@ public class AccountServlet extends HttpServlet {
 
     private OrderServiceImpl orderService = new OrderServiceImpl();
 
-    private static Logger logger = LoggerFactory.getLogger(UserBlockServlet.class.getSimpleName());
+    private static Logger logger = LoggerFactory.getLogger(AccountServlet.class.getSimpleName());
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("user");
+        User user = (User) req.getSession().getAttribute(SESSION_USER_ATTRIBUTE_NAME);
         Integer userId = user.getId();
 
         try {
@@ -43,6 +49,30 @@ public class AccountServlet extends HttpServlet {
         } catch (SQLException e) {
             logger.warn("Fault to load personal account page!", e);
             resp.setStatus(500);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html");
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(req.getInputStream()));
+        String orderIdStr = reader.readLine();
+        try {
+            if (orderIdStr != null) {
+                orderIdStr = orderIdStr.split("=")[1];
+            } else {
+                throw new JspException();
+            }
+            orderService.deleteOrder(Integer.valueOf(orderIdStr));
+            PrintWriter writer = resp.getWriter();
+            writer.print("refresh page");
+        } catch (SQLException e) {
+            logger.error("New order delete by client fault!", e);
+            resp.sendError(500);
+        } catch (NumberFormatException | JspException e) {
+            logger.error("Incorrect parsing orderId!", e);
+            resp.sendError(500);
         }
     }
 }

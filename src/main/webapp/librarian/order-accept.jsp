@@ -37,7 +37,7 @@
                     <td>Penalty: </td>
                     <td><input type="number" min="0" name="penalty" size="30"></td>
                 </tr>
-                <input type="hidden" name="id" value="${orderId}"/>
+                <input type="hidden" name="id" value="${param.id}"/>
             </table>
             <p><input type="submit" value="Done"></p>
         </form>

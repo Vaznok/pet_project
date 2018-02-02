@@ -7,7 +7,11 @@ import java.sql.SQLException;
 
 public interface OrderDao extends CrudDao<Order, Integer> {
 
-    Iterable<UnitedView> showOrdersByStatus(Order.Status status) throws SQLException;
+    Iterable<UnitedView> findOrdersByStatus(Order.Status status) throws SQLException;
 
     Iterable<UnitedView> findClientOrdersByStatus(Integer clientId, Order.Status status) throws SQLException;
+
+    Iterable<UnitedView> findExpiredOrders() throws SQLException;
+
+    Iterable<UnitedView> findClientOrders(Integer clientId) throws SQLException;
 }

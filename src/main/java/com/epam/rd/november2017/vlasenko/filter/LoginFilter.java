@@ -1,8 +1,11 @@
 package com.epam.rd.november2017.vlasenko.filter;
 
+import com.epam.rd.november2017.vlasenko.controller.LibrarianServlet;
 import com.epam.rd.november2017.vlasenko.entity.User;
 import com.epam.rd.november2017.vlasenko.service.authentication.AuthenticationServiceImpl;
 import com.epam.rd.november2017.vlasenko.service.encryption.EncryptionServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -14,12 +17,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.SESSION_USER_ATTRIBUTE_NAME;
 import static java.util.Objects.nonNull;
 
 @WebFilter("/*")
 public class LoginFilter extends BaseFilter{
-    private final static String SESSION_ATTRIBUTE_USER = "user";
-
     private AuthenticationServiceImpl authentication = new AuthenticationServiceImpl();
     private EncryptionServiceImpl encryption = new EncryptionServiceImpl();
 
@@ -31,8 +33,8 @@ public class LoginFilter extends BaseFilter{
             Enumeration<String> attrNames = session.getAttributeNames();
             while (attrNames.hasMoreElements()) {
                 String attrName = attrNames.nextElement();
-                if (attrName.equals(SESSION_ATTRIBUTE_USER)) {
-                    if (nonNull(session.getAttribute(SESSION_ATTRIBUTE_USER))) {
+                if (attrName.equals(SESSION_USER_ATTRIBUTE_NAME)) {
+                    if (nonNull(session.getAttribute(SESSION_USER_ATTRIBUTE_NAME))) {
                         chain.doFilter(request, response);
                         return;
                     }
@@ -56,7 +58,7 @@ public class LoginFilter extends BaseFilter{
                     String decryptedEmail = encryption.decrypt(cookies[emailIndex].getValue());
                     String decryptedPassword = encryption.decrypt(cookies[passwordIndex].getValue());
                     User user = authentication.getUser(decryptedEmail, decryptedPassword);
-                    request.getSession().setAttribute(SESSION_ATTRIBUTE_USER, user);
+                    request.getSession().setAttribute(SESSION_USER_ATTRIBUTE_NAME, user);
 
                     if (user == null) {
                         cookies[emailIndex].setMaxAge(0);

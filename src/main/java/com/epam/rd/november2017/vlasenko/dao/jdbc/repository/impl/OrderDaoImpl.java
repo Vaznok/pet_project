@@ -20,14 +20,34 @@ public class OrderDaoImpl implements OrderDao {
     private static final String REMOVE_ORDER = "DELETE FROM orders WHERE order_id=?;";
     private static final String FIND_ORDERS_BY_STATUS_JOIN = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id INNER JOIN users ON orders.user_id=users.id WHERE orders.status=?";
     private static final String FIND_CLIENT_ORDERS_BY_STATUS_JOIN = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id INNER JOIN users ON orders.user_id=users.id WHERE user_id=? AND orders.status=?";
-    private DataSource dataSource;
+    private static final String FIND_CLIENT_ORDERS_JOIN = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id INNER JOIN users ON orders.user_id=users.id WHERE user_id=?";
+    private static final String FIND_EXPIRED_ORDERS = "SELECT * FROM orders INNER JOIN books ON orders.book_id=books.id INNER JOIN users ON orders.user_id=users.id WHERE orders.status='RECEIVED' AND orders.returned=null";
 
+    private DataSource dataSource;
     public OrderDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+
     @Override
-    public Iterable<UnitedView> showOrdersByStatus(Order.Status status) throws SQLException {
+    public Iterable<UnitedView> findExpiredOrders() throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_EXPIRED_ORDERS)) {
+
+            return selectViewQuery(stat);
+        }
+    }
+
+    @Override
+    public Iterable<UnitedView> findClientOrders(Integer clientId) throws SQLException {
+        try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_CLIENT_ORDERS_JOIN)) {
+            stat.setInt(1, clientId);
+
+            return selectViewQuery(stat);
+        }
+    }
+
+    @Override
+    public Iterable<UnitedView> findOrdersByStatus(Order.Status status) throws SQLException {
         try (PreparedStatement stat = dataSource.getConnection().prepareStatement(FIND_ORDERS_BY_STATUS_JOIN)) {
             stat.setString(1, status.name());
 
@@ -170,6 +190,7 @@ public class OrderDaoImpl implements OrderDao {
                         .buildReturned(rs.getString("returned"))
                         .buildPenalty(rs.getInt("penalty"))
                         .buildOrderBookCount(rs.getInt("orders.count"))
+                        .buildStatus(rs.getString("status"))
                         //Book data
                         .buildBookId(rs.getInt("book_id"))
                         .buildBookName(rs.getString("books.name"))

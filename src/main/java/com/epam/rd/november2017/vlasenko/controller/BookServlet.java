@@ -1,6 +1,7 @@
 package com.epam.rd.november2017.vlasenko.controller;
 
 import com.epam.rd.november2017.vlasenko.entity.Book;
+import com.epam.rd.november2017.vlasenko.entity.User;
 import com.epam.rd.november2017.vlasenko.service.book.BookServiceImpl;
 import com.epam.rd.november2017.vlasenko.service.order.OrderServiceImpl;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.SESSION_USER_ATTRIBUTE_NAME;
 
 @WebServlet("/book")
 public class BookServlet extends HttpServlet {
@@ -57,21 +60,19 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String bookCountStr = req.getParameter("bookCount");
-        String userIdStr = req.getParameter("userId");
         String bookIdStr = req.getParameter("bookId");
+        Integer userId = ((User) req.getSession().getAttribute(SESSION_USER_ATTRIBUTE_NAME)).getId();
 
         try {
-            Integer userId = Integer.valueOf(userIdStr);
             Integer bookId = Integer.valueOf(bookIdStr);
             Integer bookCount = Integer.valueOf(bookCountStr);
 
-            if(bookService.changeBookCount(bookId, bookCount)) {
-                orderService.createOrder(userId, bookId, bookCount);
+            if(orderService.createOrder(userId, bookId, bookCount)) {
                 req.setAttribute(REQ_ATTR_NO_BOOK, "We have gotten your order! Our manager will contact you soon!");
             } else {
                 req.setAttribute(REQ_ATTR_NO_BOOK, "Sorry we don't have enough book for you. Please, choose another count!");
             }
-            //req.getRequestDispatcher("/book?id=" + bookId).forward(req, resp);
+            //req.getRequestDispatcher("book?id=" + bookId).forward(req, resp);
             resp.sendRedirect("catalog");
         } catch (NumberFormatException e) {
             logger.warn("Incorrect parameters in order creation!", e);
