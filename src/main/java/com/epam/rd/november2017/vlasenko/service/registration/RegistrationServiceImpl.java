@@ -7,6 +7,8 @@ import com.epam.rd.november2017.vlasenko.entity.User;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService<User> {
     private static final Pattern passwordPattern = Pattern.compile("^.{6,18}$");
     private static final Pattern nickNamePattern = Pattern.compile("^[A-Z][a-z0-9-]{3,14}$");
     private static final Pattern namePattern = Pattern.compile("^[A-Z][a-z-]{3,14}$");
-    private static final Pattern contactPattern = Pattern.compile("^[a-zA-Z-]{8,150}$");
+    private static final Pattern contactPattern = Pattern.compile("^.[a-zA-Z-]{8,150}$");
 
     private TransactionHandler transaction = TRANSACTION;
     private UserDao userDao = new UserDaoImpl(transaction);
@@ -30,6 +32,9 @@ public class RegistrationServiceImpl implements RegistrationService<User> {
     }
 
     private boolean validateNickName(String userName){
+        if(userName.isEmpty()) {
+            return true;
+        }
         Matcher matcher = nickNamePattern.matcher(userName);
         if(matcher.matches()){
             return true;
@@ -38,6 +43,9 @@ public class RegistrationServiceImpl implements RegistrationService<User> {
     }
 
     private boolean validateName(String name){
+        if(name.isEmpty()) {
+            return true;
+        }
         Matcher matcher = namePattern.matcher(name);
         if(matcher.matches()){
             return true;
@@ -46,7 +54,9 @@ public class RegistrationServiceImpl implements RegistrationService<User> {
     }
 
     private boolean validateContact(String name){
-
+        if(name.isEmpty()) {
+            return true;
+        }
         Matcher matcher = contactPattern.matcher(name);
         if(matcher.matches()){
             return true;
@@ -55,7 +65,7 @@ public class RegistrationServiceImpl implements RegistrationService<User> {
     }
 
     @Override
-    public String validate(User user) throws SQLException {
+    public String validate(User user, Locale locale) throws SQLException {
         String result = null;
         String email = user.getEmail();
         String password = user.getPassword();
@@ -63,25 +73,26 @@ public class RegistrationServiceImpl implements RegistrationService<User> {
         String firstName = user.getFirstName();
         String lastName = user.getLastName();
         String contact = user.getContact();
+        ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", locale);
 
         if (email.isEmpty() || password.isEmpty() || nickName.isEmpty()) {
-            result = "Email, password, and nick-name fields must be filled!";
+            result = messages.getString("no-obligatory-fields-reg.warn");
         } else if (!EmailValidator.getInstance().isValid(email)) {
-            result = "Please, use real email!";
+            result = messages.getString("incorrect-email.warn");
         } else if (transaction.doInTransaction(() -> userDao.findUserByEmail(email)) != null){
-            result = "There is an account for such email!";
+            result = messages.getString("account-exist-by-email.msg");
         } else if (!validateNickName(nickName)) {
-            result = "Nickname must consist of at least 3 and maximum 14 letters and numbers. First letter must be capital.";
+            result = messages.getString("incorrect-nickname.warn");
         } else if (transaction.doInTransaction(() -> userDao.findUserByNickName(nickName)) != null) {
-            result = "Such nickname is used. Please, choose another one.";
+            result = messages.getString("account-exist-by-nickname.msg");
         } else if (!validatePassword(password)){
-            result = "Password, must consist of minimum 6 and maximum 18 symbols!";
-        } else if (!validateName(firstName) && !firstName.isEmpty()) {
-            result = "First name must consist of at least 3 and maximum 14 letters. First letter must be capital.";
-        } else if (!validateName(lastName) && !lastName.isEmpty()) {
-            result = "Last name must consist of at least 3 and maximum 14 letters. First letter must be capital.";
-        } else if (!validateContact(contact) && !contact.isEmpty()) {
-            result = "Contact must consist of at least 10 and maximum 150 letters and numbers.";
+            result = messages.getString("incorrect-password.warn");
+        } else if (!validateName(firstName)) {
+            result = messages.getString("incorrect-firstname.warn");
+        } else if (!validateName(lastName)) {
+            result = messages.getString("incorrect-lastname.warn");
+        } else if (!validateContact(contact)) {
+            result = messages.getString("incorrect-contact.warn");
         }
         return result;
     }

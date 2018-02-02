@@ -16,6 +16,5 @@ public class GlobalConfig {
     public static final TransactionHandler TRANSACTION_TEST = new TransactionHandlerImpl(DATA_SOURCE_TEST);
 
     public static final String SESSION_USER_ATTRIBUTE_NAME = "user";
-
-    public static final ResourceBundle.Control UTF_8_CONTROL = new Utf8Control();
+    public static final String LOCALE_NAME = "locale";
 }

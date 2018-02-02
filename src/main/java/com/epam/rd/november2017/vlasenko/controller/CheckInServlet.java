@@ -47,7 +47,7 @@ public class CheckInServlet extends HttpServlet {
 
         try {
             //return value 'null' means that validateOrderConfirmation is successful otherwise return a description of the inconsistencies
-            String validationResult = registration.validate(user);
+            String validationResult = registration.validate(user, request.getLocale());
 
             if (nonNull(validationResult)) {
                 request.setAttribute(REQ_ATTR_NO_REG, validationResult);

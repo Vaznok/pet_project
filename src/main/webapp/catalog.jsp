@@ -1,22 +1,26 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String language = request.getLocale().toString();
+    request.setAttribute("language", language);
+%>
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="i18n.messages" />
+<jsp:include page="header.jsp" />
 
-<html>
-<head>
-    <title>Book catalog</title>
-    <h3>Book catalog:</h3>
-    <style>
-        <%@include file="/WEB-INF/catalog.css"%>
-    </style>
+    <title><fmt:message key="catalog.msg"/></title>
+    <h3><fmt:message key="catalog.msg"/>:</h3>
 </head>
     <body>
         <table>
             <tr>
-                <th>Book name</th>
-                <th>Author</th>
-                <th>Publisher</th>
-                <th>Publication date</th>
-                <th>Availability</th>
+                <th><fmt:message key="book-name.msg"/></th>
+                <th><fmt:message key="book-author.msg"/></th>
+                <th><fmt:message key="publisher.msg"/></th>
+                <th><fmt:message key="publication-date.msg"/></th>
+                <th><fmt:message key="book-count.msg"/></th>
             </tr>
             <c:forEach var="book" items="${books}">
                 <tr>

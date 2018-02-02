@@ -1,12 +1,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String language = request.getLocale().toString();
+    request.setAttribute("language", language);
+%>
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="i18n.messages" />
+<jsp:include page="header.jsp" />
 
-<html>
-    <head>
-        <title>Book</title>
-        <%--<style>
-            <%@include file="/WEB-INF/librarian.css"%>
-        </style>--%>
+        <title>${book.name}</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
@@ -30,26 +34,47 @@
         </script>
     </head>
     <body>
-        <h3>${book.name}</h3>
-        <h4>${book.author}</h4>
-        <h4>${book.publisher}</h4>
-        <h4>${book.publicationDate}</h4>
+        <table>
+            <tr>
+                <td><fmt:message key="book-name.msg"/>:</td>
+                <td>${book.name}</td>
+            </tr>
+            <tr>
+                <td><fmt:message key="book-author.msg"/>:</td>
+                <td>${book.author}</td>
+            </tr>
+            <tr>
+                <td><fmt:message key="publisher.msg"/>:</td>
+                <td>${book.publisher}</td>
+            </tr>
+            <tr>
+                <td><fmt:message key="publication-date.msg"/>:</td>
+                <td>${book.publicationDate}</td>
+            </tr>
+            <tr>
+                <td><fmt:message key="book-count.msg"/>:</td>
+                <td>${book.count}</td>
+            </tr>
+        </table>
         <c:choose>
             <c:when test="${sessionScope.user.role == 'ADMINISTRATOR'}">
                 <form method="post" action="http://localhost:8080/library/book">
-                    <input name="bookCount" type="number" min="1" size="4"/><input type="submit" value="Make order"/>
+                    <button type="submit"><fmt:message key="make-order.button"/></button><input name="bookCount" type="number" min="1" size="4"/>
                     <input name="bookId" type="hidden" value="${book.id}">
                 </form>
-                <input type="submit" value="Update">
-                <button class="delete" type="submit" value="${book.id}">Delete</button>
+                <button class="update" type="submit" value="${book.id}"><fmt:message key="update.button"/></button>
+                <button class="delete" type="submit" value="${book.id}"><fmt:message key="delete.button"/></button>
             </c:when>
             <c:when test="${sessionScope.user.role != null}">
                 <form method="post" action="http://localhost:8080/library/book">
-                    <input name="bookCount" type="number" min="1" size="4"/><input type="submit" value="Make order"/>
+                    <button type="submit"><fmt:message key="make-order.button"/></button><input name="bookCount" type="number" min="1" size="4"/>
                     <input name="bookId" type="hidden" value="${book.id}">
                 </form>
             </c:when>
             <c:otherwise>
+                <p style="color: red"><fmt:message key="no-right.msg"/></p>
+                <p><a href="./login"><fmt:message key="login.msg"/></a></p>
+                <p><a href="./check-in"><fmt:message key="check-in.msg"/></a></p>
             </c:otherwise>
         </c:choose>
         <h4 style="color: red"><custom:print result='${requestScope.notEnoughBooks}'/></h4>

@@ -7,13 +7,15 @@ import com.epam.rd.november2017.vlasenko.entity.User;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.TRANSACTION;
 
 public class AuthenticationServiceImpl implements AuthenticationService<User> {
-    private static final Pattern passwordPattern = Pattern.compile("^{6,18}$");
+    private static final Pattern passwordPattern = Pattern.compile("^.{6,18}$");
 
     private TransactionHandler transaction = TRANSACTION;
     private UserDao userDao = new UserDaoImpl(transaction);
@@ -28,14 +30,15 @@ public class AuthenticationServiceImpl implements AuthenticationService<User> {
 
     //return value 'null' means that validateOrderConfirmation is successful otherwise return a description of the inconsistencies
     @Override
-    public String validateSyntax(String email, String password) {
+    public String validateSyntax(String email, String password, Locale locale) {
+        ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", locale);
         String result = null;
         if (email.isEmpty() || password.isEmpty()) {
-            result = "Please, fill email and password fields!";
+            result = messages.getString("no-obligatory-fields-login.warn");
         } else if (!EmailValidator.getInstance().isValid(email)) {
-            result = "Please, use real email!";
-        } else if (validatePassword(password)) {
-            result = "Password must consist of at least 6 and maximum 18 symbols!";
+            result = messages.getString("incorrect-email.warn");
+        } else if (!validatePassword(password)) {
+            result = messages.getString("incorrect-password.warn");
         }
         return result;
     }

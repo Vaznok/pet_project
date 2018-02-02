@@ -1,13 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String language = request.getLocale().toString();
+    request.setAttribute("language", language);
+%>
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="i18n.messages" />
+<jsp:include page="/header.jsp" />
 
-<html>
-<head>
-    <title>Librarians</title>
-    <h3>Librarians:</h3>
-    <%--<style>
-        <%@include file="/WEB-INF/librarian.css"%>
-    </style>--%>
+    <title><fmt:message key="librarian-list.msg"/></title>
+    <h3><fmt:message key="librarian-list.msg"/>:</h3>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -33,11 +37,11 @@
 <body>
 <table>
     <tr>
-        <th>Librarian nickname</th>
-        <th>Email</th>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Contact</th>
+        <th><fmt:message key="nick-name.msg"/></th>
+        <th><fmt:message key="email.msg"/></th>
+        <th><fmt:message key="first-name.msg"/></th>
+        <th><fmt:message key="last-name.msg"/></th>
+        <th><fmt:message key="contact.msg"/></th>
         <th></th>
     </tr>
     <c:forEach var="librarian" items="${librarians}">
@@ -48,7 +52,7 @@
             <td>${librarian.lastName}</td>
             <td>${librarian.contact}</td>
             <td>
-                <button id="delete" type="submit" value="${librarian.id}">Delete</button>
+                <button id="delete" type="submit" value="${librarian.id}"><fmt:message key="delete.button"/></button>
             </td>
         </tr>
     </c:forEach>

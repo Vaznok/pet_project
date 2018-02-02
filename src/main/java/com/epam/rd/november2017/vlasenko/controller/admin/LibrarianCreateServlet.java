@@ -46,7 +46,7 @@ public class LibrarianCreateServlet extends HttpServlet {
 
         try {
             //return value 'null' means that validation is successful otherwise return a description of the inconsistencies
-            String validationResult = registration.validate(user);
+            String validationResult = registration.validate(user, request.getLocale());
 
             if (nonNull(validationResult)) {
                 request.setAttribute(REQ_ATTR_NO_REG, validationResult);

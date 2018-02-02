@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.SESSION_USER_ATTRIBUTE_NAME;
 import static java.util.Objects.nonNull;
@@ -39,7 +40,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         //return value 'null' means that validateOrderConfirmation is successful otherwise return a description of the inconsistencies
-        String validationResult = authentication.validateSyntax(email, password);
+        String validationResult = authentication.validateSyntax(email, password, request.getLocale());
         if (nonNull(validationResult)) {
             request.setAttribute(REQ_ATTR_NO_LOGIN, validationResult);
             request.getRequestDispatcher(PAGE_NO_LOGIN).forward(request, response);
@@ -59,7 +60,8 @@ public class LoginServlet extends HttpServlet {
             request.getSession().setAttribute(SESSION_USER_ATTRIBUTE_NAME, user);
             response.sendRedirect(request.getContextPath());
         } else {
-            request.setAttribute(REQ_ATTR_NO_LOGIN, "No account for this email and password!");
+            ResourceBundle messages = ResourceBundle.getBundle("i18n.messages", request.getLocale());
+            request.setAttribute(REQ_ATTR_NO_LOGIN, messages.getString("no-account"));
             request.getRequestDispatcher(PAGE_NO_LOGIN).forward(request, response);
         }
     }

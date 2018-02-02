@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
+import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.LOCALE_NAME;
 import static com.epam.rd.november2017.vlasenko.config.GlobalConfig.SESSION_USER_ATTRIBUTE_NAME;
 import static java.util.Objects.nonNull;
 
@@ -30,15 +31,9 @@ public class LoginFilter extends BaseFilter{
         HttpSession session = request.getSession(false);
 
         if (nonNull(session)) {
-            Enumeration<String> attrNames = session.getAttributeNames();
-            while (attrNames.hasMoreElements()) {
-                String attrName = attrNames.nextElement();
-                if (attrName.equals(SESSION_USER_ATTRIBUTE_NAME)) {
-                    if (nonNull(session.getAttribute(SESSION_USER_ATTRIBUTE_NAME))) {
-                        chain.doFilter(request, response);
-                        return;
-                    }
-                }
+            if(session.getAttribute(LOCALE_NAME) != null) {
+                chain.doFilter(request, response);
+                return;
             }
         }
         Cookie[] cookies = request.getCookies();

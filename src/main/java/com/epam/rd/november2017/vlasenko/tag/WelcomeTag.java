@@ -1,21 +1,23 @@
 package com.epam.rd.november2017.vlasenko.tag;
 
-import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
 
 public class WelcomeTag extends TagSupport {
 
     private String name;
+    private String lang;
 
     @Override
     public int doStartTag() throws JspException {
-        String prefix = "Welcome, ";
         try {
             if (name.length() > 0) {
-                pageContext.getOut().write(prefix + name);
+                pageContext.getOut().write(name);
+            } else if (lang.equals("en")) {
+                pageContext.getOut().write("guest");
             } else {
-                pageContext.getOut().write(prefix + "guest");
+                pageContext.getOut().write("гость");
             }
         } catch (IOException e) {
             throw new JspException(e.getMessage());
@@ -35,5 +37,13 @@ public class WelcomeTag extends TagSupport {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 }

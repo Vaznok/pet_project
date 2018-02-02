@@ -1,44 +1,49 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="/WEB-INF/tag/print.tld" prefix="custom" %>
-<html>
-<head>
-    <title>Check-in form</title>
-    <h2>Add librarian:</h2>
-    <%--<style>
-        <%@include file="/WEB-INF/check-in.css"%>
-    </style>--%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+    String language = request.getLocale().toString();
+    request.setAttribute("language", language);
+%>
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="i18n.messages" />
+<jsp:include page="/header.jsp"/>
+
+    <title><fmt:message key="registration-form.msg"/></title>
+    <h2><fmt:message key="registration-form.msg"/></h2>
 </head>
-<body>
-<form name="check-in" method="post" action="http://localhost:8080/library/admin/librarian-reg">
-    <table>
-        <tr>
-            <td>Email: </td>
-            <td><input type="text" name="email" size="30"></td>
-        </tr>
-        <tr>
-            <td>Password: </td>
-            <td><input type="password" name="password" size="30"></td>
-        </tr>
-        <tr>
-            <td>Nick name: </td>
-            <td><input type="text" name="nickName" size="30"></td>
-        </tr>
-        <tr>
-            <td>First name: </td>
-            <td><input type="text" name="firstName" size="30"></td>
-        </tr>
-        <tr>
-            <td>Last name: </td>
-            <td><input type="text" name="lastName" size="30"></td>
-        </tr>
-        <tr>
-            <td>Contact: </td>
-            <td><input type="text" name="contact" size="30"></td>
-        </tr>
-    </table>
-    <p><input type="submit" value="Done"></p>
-</form>
-<h4 style="color: red"><custom:print result='${requestScope.noRegister}'/></h4>
-<h4 style="color: green"><custom:print result='${requestScope.register}'/></h4>
-</body>
+    <body>
+    <form name="check-in" method="post" action="./librarian-reg">
+        <table>
+            <tr>
+                <td><fmt:message key="email.msg"/>:</td>
+                <td><input type="text" name="email" size="30"></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="password.msg"/>:</td>
+                <td><input type="password" name="password" size="30" min="6" max="18"></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="nick-name.msg"/>:</td>
+                <td><input type="text" name="nickName" size="30" min="3" max="14"></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="first-name.msg"/>:</td>
+                <td><input type="text" name="firstName" size="30" min="3" max="14"></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="last-name.msg"/>:</td>
+                <td><input type="text" name="lastName" size="30" min="3" max="14"></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="contact.msg"/>:</td>
+                <td><input type="text" name="contact" size="30" min="8" max="150"></td>
+            </tr>
+        </table>
+        <button type="submit"><fmt:message key="done.button"/></button>
+    </form>
+    <h4 style="color: red"><custom:print result='${requestScope.noRegister}'/></h4>
+    <h4 style="color: green"><custom:print result='${requestScope.register}'/></h4>
+    </body>
 </html>

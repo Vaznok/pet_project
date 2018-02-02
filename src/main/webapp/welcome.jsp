@@ -1,25 +1,32 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="/WEB-INF/tag/welcome.tld" prefix="custom" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
-<head>
-    <title>Welcome</title>
-    <h2><custom:welcome name='${sessionScope.user.nickName}'/>! </h2>
-</head>
+<%
+    String language = request.getLocale().toString();
+    request.setAttribute("language", language);
+%>
+<fmt:requestEncoding value="UTF-8" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="i18n.messages" />
+<jsp:include page="header.jsp" />
+
+        <title><fmt:message key="welcome.msg"/> </title>
+    </head>
     <body>
-        <p>You are on the site of the best Dnepropetrovsk library. Here you can see our list of books that you can rent or read in our cozy reading room.</p>
-        <p>To make order and receive a book you must register and log in to the site. Also in your personal account, you can track the deadline of renting a book.</p>
-        <p><a href="./login">Log in</a></p>
-        <p><a href="./check-in">Check in</a></p>
-        <p><a href="./account">My account</a></p>
-        <p><a href="./catalog">Book catalog</a></p>
+        <h2><fmt:message key="welcome.msg" />, <custom:welcome name='${sessionScope.user.nickName}' lang='${language}'/>! </h2>
+        <p style="width: 1000px"><fmt:message key="library.description"/></p>
+        <p><a href="./login"><fmt:message key="login.msg"/></a></p>
+        <p><a href="./check-in"><fmt:message key="check-in.msg"/></a></p>
+        <p><a href="./account"><fmt:message key="personal-account"/></a></p>
+        <p><a href="./catalog"><fmt:message key="catalog.msg"/></a></p>
         <c:choose>
             <c:when test="${sessionScope.user.role == 'ADMINISTRATOR'}">
-                <p><a href="./admin">Admin panel</a></p>
-                <p><a href="./librarian">Librarian panel</a></p>
+                <p><a href="./admin"><fmt:message key="admin-panel.msg"/></a></p>
+                <p><a href="./librarian"><fmt:message key="librarian-panel.msg"/></a></p>
             </c:when>
             <c:when test="${sessionScope.user.role == 'LIBRARIAN'}">
-                <p><a href="./librarian">Librarian panel</a></p>
+                <p><a href="./librarian"><fmt:message key="librarian-panel.msg"/></a></p>
             </c:when>
         </c:choose>
     </body>
